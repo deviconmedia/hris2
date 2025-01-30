@@ -193,7 +193,7 @@
                         </li>
 
                         <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link text-danger">Logout</a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" class="submenu-link text-danger">Logout</a>
 
                         </li>
 
