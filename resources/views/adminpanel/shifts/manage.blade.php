@@ -1,0 +1,147 @@
+@extends('layouts.admin_layout.app')
+
+@section('title')
+    Shift & Jam Kerja
+@endsection
+
+@section('subtitle')
+    Semua Data Shift & Jam Kerja
+@endsection
+
+@section('content')
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-header-action d-flex justify-content-end">
+                    <a href="{{ route('shifts.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
+                        Tambah Baru</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="shiftsTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nama Shift</th>
+                                    <th>Jam Mulai</th>
+                                    <th>Jam Batas Mulai</th>
+                                    <th>Jam Selesai</th>
+                                    <th>Status</th>
+                                    <th>Opsi</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#shiftsTable').DataTable({
+                processing: true,
+                serverside: true,
+                ajax: '{!! route('shifts.getData') !!}',
+                columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                }, {
+                    data: 'nama_shift',
+                    name: 'Nama Shift',
+                    render: function(data, type, row) {
+                        return data.charAt(0).toUpperCase() + data.slice(1).toLowerCase();
+                    }
+                },
+                {
+                    data: 'jam_mulai',
+                    name: 'Jam Mulai',
+                    render: function(data, type, row) {
+                        return data ? data : '-';
+                    }
+                },
+                {
+                    data: 'jam_batas_mulai',
+                    name: 'Jam Batas Mulai',
+                    render: function(data, type, row) {
+                        return data ? data : '-';
+                    }
+                },
+                {
+                    data: 'jam_selesai',
+                    name: 'Jam Selesai',
+                    render: function(data, type, row) {
+                        return data ? data : '-';
+                    }
+                },
+                {
+                    data: 'status',
+                    name: 'Status',
+                    render: function(data, type, row) {
+                        if (data == 1) {
+                            return '<span class="badge bg-success">Aktif</span>';
+                        } else {
+                            return '<span class="badge bg-danger">Tidak Aktif</span>';
+                        }
+                    }
+                }, {
+                    data: 'opsi',
+                    name: 'Opsi',
+                    orderable: false,
+                    searchable: false
+                }]
+            });
+        });
+
+        // Delete Data
+        function deleteData(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/shifts/hapus/' + id,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire(
+                                    'Dihapus!',
+                                    'Data berhasil dihapus.',
+                                    'success'
+                                );
+                                $('#shiftsTable').DataTable().ajax.reload(); // Reload tabel DataTables
+                            } else {
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function() {
+                            Swal.fire(
+                                'Error!',
+                                'Terjadi kesalahan. Silakan coba lagi.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+@endpush
