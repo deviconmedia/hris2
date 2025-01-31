@@ -80,7 +80,7 @@
 
                     </ul>
                 </li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub {{ request()->is('presensi') || request()->is('presensi/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-clock-fill"></i>
                         <span>Presensi</span>
@@ -88,7 +88,7 @@
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
+                        <li class="submenu-item {{ request()->is('presensi/rekam') ? 'active' : '' }}">
                             <a href="{{ route('presensi.index') }}" class="submenu-link">Rekam Kehadiran</a>
 
                         </li>

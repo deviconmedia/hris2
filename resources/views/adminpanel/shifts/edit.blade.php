@@ -42,7 +42,7 @@
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" id="status" class="form-select" required>
                                     <option value="1" {{ $shift->status == 1 ? 'selected' : '' }}>Aktif</option>
-                                    <option value="1" {{ $shift->status == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                                    <option value="0" {{ $shift->status == 0 ? 'selected' : '' }}>Tidak Aktif</option>
                                 </select>
                             </div>
                             <div class="row my-3">
