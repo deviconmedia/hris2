@@ -53,9 +53,6 @@
                 }, {
                     data: 'nama_shift',
                     name: 'Nama Shift',
-                    render: function(data, type, row) {
-                        return data.charAt(0).toUpperCase() + data.slice(1).toLowerCase();
-                    }
                 },
                 {
                     data: 'jam_mulai',

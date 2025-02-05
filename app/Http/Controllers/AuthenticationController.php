@@ -46,7 +46,7 @@ class AuthenticationController extends Controller
             $clockNow = Carbon::now();
             $lastLogged = User::where('id', $user->id)->update(['last_logged' => $clockNow]);
 
-            return redirect()->intended('beranda')->with('success', 'Login berhasil!');
+            return redirect()->intended('beranda');
         }
 
         return back()->withErrors([
