@@ -39,6 +39,13 @@ class RekamKehadiranController extends Controller
         try {
             $validated = $request->validated();
 
+            if(is_null($validated['latitude']) || is_null($validated['longitude'])){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lokasi tidak ditemukan',
+                ], 200);
+            }
+
             //cek tipe absensi
             $shift = Shift::where('id', $validated['shift_id'])->first();
 
@@ -49,14 +56,16 @@ class RekamKehadiranController extends Controller
                 ], 200);
             }
 
+
             $clockNow = strtotime(Carbon::now()->format('H:i:s'));
             $today  = Carbon::now()->format('Y-m-d');
             $employeeId = auth()->user()->karyawan->id;
+            $lokasi = $validated['latitude'] . "," . $validated['longitude'];
 
             if($clockNow < strtotime($shift->jam_mulai)){
                 return response()->json([
                     'success' => false,
-                    'message' => 'Belum saatnya presensi masuk! Coba lagi pada Pkl.' . $shift->jam_mulai,
+                    'message' => "Belum saatnya presensi masuk! Coba lagi pada Pkl.  $shift->jam_mulai",
                 ], 200);
             }elseif($clockNow >= strtotime($shift->jam_mulai) && $clockNow <= strtotime($shift->jam_batas_mulai)){
                 //cek ketersediaan presensi
@@ -74,7 +83,7 @@ class RekamKehadiranController extends Controller
                         'shift_id'      => $validated['shift_id'],
                         'tgl_rekam'     => $today,
                         'jam_masuk'     => Carbon::now()->format('H:i:s'),
-                        'lokasi'        => $validated['lokasi'],
+                        'lokasi'        => $lokasi,
                         'status'        => 'hadir'
                     ]);
 
@@ -111,7 +120,7 @@ class RekamKehadiranController extends Controller
                         'shift_id' => $validated['shift_id'],
                         'tgl_rekam' => $today,
                         'jam_masuk' => Carbon::now()->format('H:i:s'),
-                        'lokasi'    => $validated['lokasi'],
+                        'lokasi'    => $lokasi,
                         'status'    => 'terlambat'
                     ]);
 

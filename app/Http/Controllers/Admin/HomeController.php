@@ -22,7 +22,7 @@ class HomeController extends Controller
         if(!$data['absen']){
             $shifts = Shift::where('status', 1)->get();
         }else{
-            $shifts = Shift::where('id', $data['absen']['shift_id'])->first();
+            $shifts = Shift::where('id', $data['absen']['shift_id'])->get();
         }
 
         $data = [

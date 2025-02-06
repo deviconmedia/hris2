@@ -159,7 +159,8 @@
 
             var formData = {
                 shift_id: $('#shift_id').val(),
-                lokasi: $('#latitude').val() + "," + $('#longitude').val(),
+                latitude: $('#latitude').val(),
+                longitude: $('#longitude').val(),
             }
 
             $.ajax({

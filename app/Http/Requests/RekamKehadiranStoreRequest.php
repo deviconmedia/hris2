@@ -23,7 +23,8 @@ class RekamKehadiranStoreRequest extends FormRequest
     {
         return [
             'shift_id' => ['required', 'numeric', 'exists:shifts,id'],
-            'lokasi'    => ['required', 'string'],
+            'latitude'    => ['required'],
+            'longitude'    => ['required'],
         ];
     }
 
@@ -34,7 +35,8 @@ class RekamKehadiranStoreRequest extends FormRequest
             'shift_id.required' => 'Shift harus diisi',
             'shift_id.numeric' => 'Id Shift harus berupa angka',
             'shift_id.exists' => 'Shift tidak ditemukan',
-            'lokasi.required' => 'Lokasi harus diisi',
+            'latitude.required' => 'Lokasi tidak ditemukan',
+            'longitude.required' => 'Lokasi tidak ditemukan',
         ];
     }
 
