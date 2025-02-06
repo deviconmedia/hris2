@@ -93,8 +93,8 @@
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Presensi Saya</a>
+                        <li class="submenu-item {{ request()->is('presensi/ringkasan') || request()->is('presensi/ringkasan/*') ? 'active' : '' }}">
+                            <a href="{{ route('presensi.myAttendances') }}" class="submenu-link">Presensi Saya</a>
                         </li>
 
                     </ul>

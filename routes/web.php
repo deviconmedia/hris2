@@ -76,8 +76,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/presensi/get_data', 'getData')->name('presensi.getData');
         Route::get('/presensi/tambah', 'create')->name('presensi.create');
         Route::post('/presensi/tambah', 'store')->name('presensi.store');
-        Route::get('/presensi/edit/{id}', 'edit')->name('presensi.edit');
-        Route::patch('/presensi/edit/{id}', 'update')->name('presensi.update');
-        Route::delete('/presensi/hapus/{id}', 'destroy')->name('presensi.destroy');
+        Route::get('/presensi/ringkasan', 'myAttendances')->name('presensi.myAttendances');
+        Route::get('/presensi/get_data', 'getData')->name('presensi.getData');
+        Route::get('/presensi/ringkasan/detail/{id}', 'show')->name('presensi.show');
     });
 });

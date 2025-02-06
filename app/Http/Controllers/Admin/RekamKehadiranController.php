@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
+use App\Models\Shift;
+use Illuminate\Http\Request;
+use App\Models\RekamKehadiran;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RekamKehadiranStoreRequest;
-use App\Models\RekamKehadiran;
-use App\Models\Shift;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class RekamKehadiranController extends Controller
@@ -33,6 +34,34 @@ class RekamKehadiranController extends Controller
         return view('adminpanel.presensi.rekam', compact('data'));
     }
 
+    public function myAttendances()
+    {
+        return view('adminpanel.presensi.manage');
+    }
+
+    public function getData()
+    {
+        $presensi = RekamKehadiran::where('karyawan_id', auth()->user()->karyawan->id)->get();
+        return DataTables::of($presensi)
+            ->addIndexColumn()
+            ->addColumn('opsi', function ($presensi) {
+                $editUrl = route('presensi.show', $presensi->id);
+                return '
+                    <a href="' . $editUrl . '" class="btn btn-info btn-sm">Detail</a>
+                ';
+            })
+            ->addColumn('nama_shift', function($presensi){
+                return $presensi->shift->nama_shift ?? 'Tidak Diketahui';
+            })
+            ->rawColumns(['opsi'])
+            ->make(true);
+    }
+
+    public function show($id)
+    {
+        $presensi = RekamKehadiran::findOrFail($id);
+        return view('adminpanel.presensi.detail', compact('presensi'));
+    }
 
     public function store(RekamKehadiranStoreRequest $request)
     {
