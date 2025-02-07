@@ -217,11 +217,13 @@ class KaryawanController extends Controller
                 $employee->update($validated);
 
                 $user = User::where('karyawan_id', $id)->first();
-                $user->update([
-                    'name' => $validated['nama'],
-                    'email' => $validated['email'],
-                    'phone' => $validated['telepon'],
-                ]);
+                if($user){
+                    $user->update([
+                        'name' => $validated['nama'],
+                        'email' => $validated['email'],
+                        'phone' => $validated['telepon'],
+                    ]);
+                }
             });
 
             return response()->json(
