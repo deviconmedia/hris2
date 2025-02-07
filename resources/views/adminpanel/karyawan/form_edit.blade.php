@@ -157,6 +157,7 @@
 
         $('#createForm').on('submit', function(e) {
             e.preventDefault();
+            var id = $('#id').val();
             var formData = {
                 nama: $('#nama').val(),
                 nik: $('#nik').val(),
@@ -173,7 +174,7 @@
             };
 
             $.ajax({
-                url: '{{ route('karyawan.update', $karyawan->id) }}',
+                url: `{{ url('karyawan/edit/${id}') }}`,
                 type: 'PATCH',
                 data: formData,
                 beforeSend: function() {
