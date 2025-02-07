@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\JabatanController;
+use App\Http\Controllers\Admin\JenisCutiController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\RekamKehadiranController;
 use App\Http\Controllers\Admin\ShiftController;
@@ -80,4 +81,17 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/presensi/get_data', 'getData')->name('presensi.getData');
         Route::get('/presensi/ringkasan/detail/{id}', 'show')->name('presensi.show');
     });
+
+    Route::prefix('cuti')->group(function(){
+        Route::controller(JenisCutiController::class)->group(function(){
+            Route::get('/jenis_cuti', 'index')->name('jenis_cuti.index');
+            Route::get('/jenis_cuti/get_data', 'getData')->name('jenis_cuti.getData');
+            Route::get('/jenis_cuti/tambah', 'create')->name('jenis_cuti.create');
+            Route::post('/jenis_cuti/tambah', 'store')->name('jenis_cuti.store');
+            Route::get('/jenis_cuti/edit/{id}', 'edit')->name('jenis_cuti.edit');
+            Route::patch('/jenis_cuti/edit/{id}', 'update')->name('jenis_cuti.update');
+            Route::delete('/jenis_cuti/{id}', 'destroy')->name('jenis_cuti.destroy');
+        });
+    });
+
 });

@@ -99,13 +99,18 @@
 
                     </ul>
                 </li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item has-sub {{ request()->is('cuti') || request()->is('cuti/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-bell-slash-fill"></i>
                         <span>Leave & Cuti</span>
                     </a>
 
                     <ul class="submenu ">
+
+                        <li class="submenu-item  {{ request()->is('cuti/jenis_cuti') || request()->is('cuti/jenis_cuti/*') ? 'active' : '' }}">
+                            <a href="{{ route('jenis_cuti.index') }}" class="submenu-link">Jenis Cuti</a>
+
+                        </li>
 
                         <li class="submenu-item  ">
                             <a href="component-accordion.html" class="submenu-link">Pengajuan Cuti</a>
