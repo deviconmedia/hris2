@@ -117,8 +117,8 @@
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Norma Cuti</a>
+                        <li class="submenu-item {{ request()->is('cuti/norma_cuti') || request()->is('cuti/norma_cuti/*') ? 'active' : '' }} ">
+                            <a href="{{ route('norma_cuti.index') }}" class="submenu-link">Norma Cuti</a>
 
                         </li>
 

@@ -47,7 +47,7 @@ class RekamKehadiranController extends Controller
             ->addColumn('opsi', function ($presensi) {
                 $editUrl = route('presensi.show', $presensi->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-info btn-sm">Detail</a>
+                    <a href="' . $editUrl . '" class="btn btn-outline-primary btn-sm"><i class="bi bi-info-circle"></i> Detail</a>
                 ';
             })
             ->addColumn('nama_shift', function($presensi){
@@ -133,14 +133,14 @@ class RekamKehadiranController extends Controller
                             'message'   => 'Anda sudah melakukan presensi!'
                     ]);
                    }
-                   $absen->update([
-                        'jam_pulang' => Carbon::now()->format('H:i:s'),
-                        'status'    => 'pulang cepat'
-                   ]);
+                //    $absen->update([
+                //         'jam_pulang' => Carbon::now()->format('H:i:s'),
+                //         'status'    => 'pulang cepat'
+                //    ]);
 
                    return response()->json([
-                        'success' => true,
-                        'message'   => 'Presensi Anda berhasil direkam'
+                        'success' => false,
+                        'message'   => "Belum saatnya absen pulang. Coba lagi pada Pkl. $shift->jam_selesai"
                    ]);
 
                 }else{

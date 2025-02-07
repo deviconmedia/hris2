@@ -33,7 +33,7 @@ class KaryawanController extends Controller
             ->addColumn('opsi', function ($staff) {
                 $showUrl = route('karyawan.show', $staff->id);
                 return '
-                    <a href="' . $showUrl . '" class="btn btn-primary btn-sm">Detail</a>
+                    <a href="' . $showUrl . '" class="btn btn-outline-primary btn-sm"><i class="bi bi-info-circle"></i> Detail</a>
                 ';
             })
             ->rawColumns(['opsi'])

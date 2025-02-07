@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisCutiController;
 use App\Http\Controllers\Admin\KaryawanController;
+use App\Http\Controllers\Admin\NormaCutiController;
 use App\Http\Controllers\Admin\RekamKehadiranController;
 use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\AuthenticationController;
@@ -92,6 +93,12 @@ Route::group(['middleware' => ['auth']], function(){
             Route::patch('/jenis_cuti/edit/{id}', 'update')->name('jenis_cuti.update');
             Route::delete('/jenis_cuti/{id}', 'destroy')->name('jenis_cuti.destroy');
         });
+
+        Route::controller(NormaCutiController::class)->group(function(){
+            Route::get('/norma_cuti', 'index')->name('norma_cuti.index');
+            Route::get('/norma_cuti/get_data', 'getData')->name('norma_cuti.getData');
+        });
+
     });
 
 });

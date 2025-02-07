@@ -1,32 +1,64 @@
 @extends('layouts.admin_layout.app')
 
 @section('title')
-    Shift & Jam Kerja
+    Norma Cuti
 @endsection
 
 @section('subtitle')
-    Semua Data Shift & Jam Kerja
+    Semua Data Norma Cuti
 @endsection
+
+@push('css')
+    <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/choices.js/public/assets/styles/choices.css') }}">
+@endpush
 
 @section('content')
     <div class="col-12">
+        <div class="alert alert-info">
+            <p>Data norma cuti yang ditampilkan adalah norma cuti tahun berjalan untuk semua pegawai.</p>
+        </div>
         <div class="card">
             <div class="card-header">
-                <div class="card-header-action d-flex justify-content-end">
-                    <a href="{{ route('shifts.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
-                        Tambah Baru</a>
+                <div class="card-header-action">
+                    <form id="filterForm" method="GET" data-url="{{ route('norma_cuti.getData') }}">
+                       <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
+                                    <select name="karyawan_id" id="karyawan_id" class="form-select choices">
+                                        @foreach ($data['staffs'] as $staff)
+                                            <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="karyawan_id" class="form-label">Pilih Jenis Cuti</label>
+                                    <select name="karyawan_id" id="karyawan_id" class="form-select choices">
+                                        @foreach ($data['jenisCuti'] as $cuti)
+                                            <option value="{{ $cuti->id }}">{{ $cuti->nama_cuti }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                       </div>
+                    </form>
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ route('jenis_cuti.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
+                            Tambah Baru</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table" id="shiftsTable">
+                        <table class="table" id="jenisCutiTable">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Shift</th>
-                                    <th>Jam Mulai</th>
-                                    <th>Jam Batas Mulai</th>
-                                    <th>Jam Selesai</th>
-                                    <th>Status</th>
+                                    <th>Nama Karyawan</th>
+                                    <th>Jenis Cuti</th>
+                                    <th>Cuti Maksimum Tahun ini</th>
+                                    <th>Sisa Hari</th>
                                     <th>Opsi</th>
                                 </tr>
                             </thead>
@@ -39,53 +71,45 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset('mazer/assets/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
+    <script src="{{ asset('mazer/assets/static/js/pages/form-element-select.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#shiftsTable').DataTable({
+            $('#jenisCutiTable').DataTable({
                 processing: true,
                 serverside: true,
-                ajax: '{!! route('shifts.getData') !!}',
+                ajax: '{!! route('norma_cuti.getData') !!}',
                 columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
                 }, {
-                    data: 'nama_shift',
-                    name: 'Nama Shift',
+                    data: 'karyawan',
+                    name: 'Nama Karyawan',
                 },
                 {
-                    data: 'jam_mulai',
-                    name: 'Jam Mulai',
+                    data: 'jenis_cuti',
+                    name: 'Jenis Cuti',
                     render: function(data, type, row) {
                         return data ? data : '-';
                     }
                 },
                 {
-                    data: 'jam_batas_mulai',
-                    name: 'Jam Batas Mulai',
+                    data: 'cuti_max',
+                    name: 'Jumlah Hari Maksimum',
+                    render: function(data, type, row) {
+                        return data ? data : 0;
+                    }
+                },
+                {
+                    data: 'jml_hari',
+                    name: 'Jumlah Hari',
                     render: function(data, type, row) {
                         return data ? data : '-';
                     }
                 },
                 {
-                    data: 'jam_selesai',
-                    name: 'Jam Selesai',
-                    render: function(data, type, row) {
-                        return data ? data : '-';
-                    }
-                },
-                {
-                    data: 'status',
-                    name: 'Status',
-                    render: function(data, type, row) {
-                        if (data == 1) {
-                            return '<span class="text-success"><i class="bi bi-check-circle-fill"></i> Aktif</span>';
-                        } else {
-                            return '<span class="text-danger"><i class="bi bi-x-circle"></i> Tidak Aktif</span>';
-                        }
-                    }
-                }, {
                     data: 'opsi',
                     name: 'Opsi',
                     orderable: false,
@@ -108,7 +132,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/shifts/hapus/' + id,
+                        url: '/cuti/jenis_cuti/' + id,
                         type: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -120,7 +144,7 @@
                                     'Data berhasil dihapus.',
                                     'success'
                                 );
-                                $('#shiftsTable').DataTable().ajax.reload(); // Reload tabel DataTables
+                                $('#jenisCutiTable').DataTable().ajax.reload();
                             } else {
                                 Swal.fire(
                                     'Gagal!',

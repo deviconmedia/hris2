@@ -26,8 +26,8 @@ class JenisCutiController extends Controller
             ->addColumn('opsi', function ($jenisCuti) {
                 $editUrl = route('jenis_cuti.edit', $jenisCuti->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deleteData(' . $jenisCuti->id . ')">Hapus</button>
+                    <a href="' . $editUrl . '" class="btn btn-outline-primary btn-sm">Edit</a>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData(' . $jenisCuti->id . ')">Hapus</button>
                 ';
             })
             ->rawColumns(['opsi'])

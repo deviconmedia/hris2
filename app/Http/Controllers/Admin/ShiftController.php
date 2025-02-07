@@ -26,8 +26,8 @@ class ShiftController extends Controller
             ->addColumn('opsi', function ($shifts) {
                 $editUrl = route('shifts.edit', $shifts->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deleteData(' . $shifts->id . ')">Hapus</button>
+                    <a href="' . $editUrl . '" class="btn btn-outline-primary btn-sm">Edit</a>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData(' . $shifts->id . ')">Hapus</button>
                 ';
             })
             ->rawColumns(['opsi'])

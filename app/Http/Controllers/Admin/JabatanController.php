@@ -26,8 +26,8 @@ class JabatanController extends Controller
             ->addColumn('opsi', function ($jabatan) {
                 $editUrl = route('jabatan.edit', $jabatan->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deleteData(' . $jabatan->id . ')">Hapus</button>
+                    <a href="' . $editUrl . '" class="btn btn-outline-primary btn-sm">Edit</a>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData(' . $jabatan->id . ')">Hapus</button>
                 ';
             })
             ->rawColumns(['opsi'])

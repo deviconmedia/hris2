@@ -86,12 +86,12 @@
                     name: 'Status',
                     render: function(data, type, row) {
                         if (data == 'hadir') {
-                            return '<span class="badge bg-success">Hadir</span>';
+                            return '<span class="text-success"><i class="bi bi-check-circle-fill"></i> Hadir</span>';
                         } else if(data == 'terlambat')
                         {
-                            return '<span class="badge bg-danger">Terlambat</span>';
+                            return '<span class="text-danger"><i class="bi bi-x-circle"></i> Terlambat</span>';
                         }else{
-                            return '<span class="badge bg-warning">Pulang Cepat</span>';
+                            return '<span class="text-danger"><i class="bi bi-x-circle"></i> Pulang Cepat</span>';
                         }
                     }
                 }, {

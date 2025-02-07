@@ -26,8 +26,8 @@ class DivisiController extends Controller
             ->addColumn('opsi', function ($divisi) {
                 $editUrl = route('divisi.edit', $divisi->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deleteData(' . $divisi->id . ')">Hapus</button>
+                    <a href="' . $editUrl . '" class="btn btn-outline-primary btn-sm">Edit</a>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData(' . $divisi->id . ')">Hapus</button>
                 ';
             })
             ->rawColumns(['opsi'])
