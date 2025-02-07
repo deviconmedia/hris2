@@ -94,7 +94,7 @@ class RekamKehadiranController extends Controller
             if($clockNow < strtotime($shift->jam_mulai)){
                 return response()->json([
                     'success' => false,
-                    'message' => "Belum saatnya presensi masuk! Coba lagi pada Pkl.  $shift->jam_mulai",
+                    'message' => "Gagal merekam data! Coba lagi pada Pkl.  $shift->jam_mulai",
                 ], 200);
             }elseif($clockNow >= strtotime($shift->jam_mulai) && $clockNow <= strtotime($shift->jam_batas_mulai)){
                 //cek ketersediaan presensi
@@ -140,7 +140,7 @@ class RekamKehadiranController extends Controller
 
                    return response()->json([
                         'success' => false,
-                        'message'   => "Belum saatnya absen pulang. Coba lagi pada Pkl. $shift->jam_selesai"
+                        'message'   => "Gagal merekam data. Coba lagi pada Pkl. $shift->jam_selesai"
                    ]);
 
                 }else{
