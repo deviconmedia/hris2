@@ -102,7 +102,7 @@
                 <li class="sidebar-item has-sub {{ request()->is('cuti') || request()->is('cuti/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-bell-slash-fill"></i>
-                        <span>Leave & Cuti</span>
+                        <span>Cuti</span>
                     </a>
 
                     <ul class="submenu ">

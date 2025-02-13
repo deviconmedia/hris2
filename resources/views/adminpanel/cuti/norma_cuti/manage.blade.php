@@ -45,7 +45,7 @@
                        </div>
                     </form>
                     <div class="d-flex justify-content-end">
-                        <a href="{{ route('jenis_cuti.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
+                        <a href="{{ route('norma_cuti.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
                             Tambah Baru</a>
                     </div>
                 </div>

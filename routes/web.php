@@ -97,6 +97,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::controller(NormaCutiController::class)->group(function(){
             Route::get('/norma_cuti', 'index')->name('norma_cuti.index');
             Route::get('/norma_cuti/get_data', 'getData')->name('norma_cuti.getData');
+            Route::get('/norma_cuti/tambah', 'create')->name('norma_cuti.create');
+            Route::post('/norma_cuti/tambah', 'store')->name('norma_cuti.store');
         });
 
     });

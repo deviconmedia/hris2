@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>@yield('title') - {{ env('APP_NAME') }}</title>
@@ -30,5 +31,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="{{ asset('login/js/scripts.js') }}"></script>
+        <script src="{{ asset('static/js/sweetalert2@11.js') }}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+       @stack('js')
     </body>
 </html>

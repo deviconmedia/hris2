@@ -6,6 +6,7 @@ use App\Models\NormaCuti;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NormaCutiStoreRequest;
 use App\Models\JenisCuti;
 use App\Models\Karyawan;
 
@@ -42,6 +43,24 @@ class NormaCutiController extends Controller
             })
             ->rawColumns(['opsi'])
             ->make(true);
+    }
+
+    public function create()
+    {
+        $data['staffs'] = Karyawan::where('status', 1)->get(['id', 'nama']);
+        $data['jenisCuti'] = JenisCuti::get(['id', 'nama_cuti', 'jml_hari']);
+
+        return view('adminpanel.cuti.norma_cuti.create', compact('data'));
+    }
+
+    public function store(NormaCutiStoreRequest $request)
+    {
+        try {
+            $validated = $request->validated();
+            dd($validated);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 
 }

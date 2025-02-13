@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserAuthenticateRequest;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,41 +18,53 @@ class AuthenticationController extends Controller
 
     public function userSignIn()
     {
-        return view('authentication.login');
+        return view('authentication.signin');
     }
 
-    public function authenticate(Request $request): RedirectResponse
+    public function authenticate(UserAuthenticateRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        try {
+            $credentials = $request->only('email', 'password');
 
-        $credentials = $request->validate([
-            'email'     => ['required', 'email'],
-            'password'  => ['required'],
-        ]);
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+            $credentials =$request->validated();
 
-            if (!$user->is_active) {
-                Auth::logout();
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
 
-                return back()
-                    ->withErrors([
-                        'email' => 'Akun Anda tidak aktif. Silakan hubungi administrator.',
-                    ])
-                    ->onlyInput('email');
+                if (!$user->is_active) {
+                    Auth::logout();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Akun Anda Tidak Aktif. Silahkan hubungi Administrator.',
+                    ],  403);
+                }
+
+                $request->session()->regenerate();
+
+                $clockNow = Carbon::now();
+                $lastLogged = User::where('id', $user->id)->update(['last_logged' => $clockNow]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Login berhasil',
+                ],  200);
+
             }
 
-            $request->session()->regenerate();
+            return response()->json([
+                'success' => false,
+                'message' => 'Email atau kata sandi salah.',
+            ],  403);
 
-            $clockNow = Carbon::now();
-            $lastLogged = User::where('id', $user->id)->update(['last_logged' => $clockNow]);
-
-            return redirect()->intended('beranda');
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat mengirim data: ' . $th->getMessage(),
+                ],
+                500,
+            );
         }
-
-        return back()->withErrors([
-            'email' => 'Email atau kata sandi salah.',
-        ])->onlyInput('email');
     }
 
     public function logout(Request $request): RedirectResponse
