@@ -61,7 +61,7 @@ class Karyawan extends Model
 
     public function normaCuti(): BelongsToMany
     {
-        return $this->belongsToMany(NormaCuti::class);
+        return $this->belongsToMany(NormaCuti::class, 'norma_cuti', 'karyawan_id', 'jenis_cuti_id');
     }
 
 }

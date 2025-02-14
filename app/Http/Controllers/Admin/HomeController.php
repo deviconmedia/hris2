@@ -7,6 +7,8 @@ use App\Models\Shift;
 use Illuminate\Http\Request;
 use App\Models\RekamKehadiran;
 use App\Http\Controllers\Controller;
+use App\Models\Karyawan;
+use App\Models\PengajuanCuti;
 
 class HomeController extends Controller
 {
@@ -32,4 +34,19 @@ class HomeController extends Controller
         ];
         return view('adminpanel.home', compact('data'));
     }
+
+    public function countData()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        $data = [
+            'staffs' => Karyawan::where('status', 1)->count(),
+            'checkins' => RekamKehadiran::where('tgl_rekam', $today)->count(),
+            'cutis' => PengajuanCuti::where('status', 'disetujui')->count()
+        ];
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
 }

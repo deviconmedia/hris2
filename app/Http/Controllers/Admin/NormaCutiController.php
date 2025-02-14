@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Karyawan;
+use App\Models\JenisCuti;
 use App\Models\NormaCuti;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NormaCutiStoreRequest;
-use App\Models\JenisCuti;
-use App\Models\Karyawan;
 
 class NormaCutiController extends Controller
 {
@@ -19,29 +19,29 @@ class NormaCutiController extends Controller
         return view('adminpanel.cuti.norma_cuti.manage', compact('data'));
     }
 
-    public function getData()
+    public function getData(Request $request)
     {
-        $normaCuti = NormaCuti::all();
+        $staffId = $request->input('karyawan_id');
+        $currentStaff = auth()->user()->karyawan->id;
+
+        $normaCuti = NormaCuti::query(); // Mulai query builder
+
+        if ($staffId) {
+            $normaCuti->where('karyawan_id', $staffId);
+        } else {
+            $normaCuti->where('karyawan_id', $currentStaff);
+        }
+
+        $normaCuti = $normaCuti->get(); // Dapatkan hasil akhir dari query
 
         return DataTables::of($normaCuti)
             ->addIndexColumn()
-            ->addColumn('opsi', function ($normaCuti) {
-                $editUrl = route('jenis_cuti.edit', $normaCuti->id);
-                return '
-                    <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deleteData(' . $normaCuti->id . ')">Hapus</button>
-                ';
-            })
             ->addColumn('jenis_cuti', function($normaCuti){
                 return $normaCuti->jenisCuti->nama_cuti ?? 'Tidak Diketahui';
             })
             ->addColumn('cuti_max', function($normaCuti){
                 return $normaCuti->jenisCuti->jml_hari ?? 0 ;
             })
-            ->addColumn('karyawan', function($normaCuti){
-                return $normaCuti->karywan->nama ?? 'Tidak Diketahui';
-            })
-            ->rawColumns(['opsi'])
             ->make(true);
     }
 
@@ -57,10 +57,33 @@ class NormaCutiController extends Controller
     {
         try {
             $validated = $request->validated();
-            dd($validated);
+
+            $karyawan = Karyawan::where('id', $validated['karyawan_id'])->first();
+
+            foreach ($validated['jenis_cuti_id'] as $jenisCutiId) {
+                $jenisCuti = JenisCuti::where('id', $jenisCutiId)->first();
+                $jmlHari = $jenisCuti->jml_hari;
+
+                $karyawan->normaCuti()->attach(
+                    $jenisCutiId,
+                    ['jml_hari' => $jmlHari, 'created_at' => now(), 'updated_at' => now()],
+                );
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil ditambahkan!'
+            ], 200);
+
+
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data.' . $th->getMessage()
+            ], 500);
         }
     }
+
+
 
 }

@@ -185,5 +185,34 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function getCountData() {
+            $.ajax({
+                url: '/dashboard/get-count/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#employees').text(data.employees);
+                    $('#attendances').text(data.attendances);
+                    $('#activeUsers').text(data.activeUsers);
+                    $('#inactiveUsers').text(data.inactiveUsers);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error: ' + error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            getCountData();
+            setInterval(getCountData, 60000);
+        });
+
     </script>
 @endpush

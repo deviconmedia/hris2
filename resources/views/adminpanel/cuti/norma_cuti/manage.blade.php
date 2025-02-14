@@ -21,7 +21,7 @@
             <div class="card-header">
                 <div class="card-header-action">
                     <form id="filterForm" method="GET" data-url="{{ route('norma_cuti.getData') }}">
-                       <div class="row">
+                        <div class="row">
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
@@ -32,34 +32,23 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="karyawan_id" class="form-label">Pilih Jenis Cuti</label>
-                                    <select name="karyawan_id" id="karyawan_id" class="form-select choices">
-                                        @foreach ($data['jenisCuti'] as $cuti)
-                                            <option value="{{ $cuti->id }}">{{ $cuti->nama_cuti }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                       </div>
+                        </div>
                     </form>
                     <div class="d-flex justify-content-end">
-                        <a href="{{ route('norma_cuti.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
+                        <a href="{{ route('norma_cuti.create') }}" class="btn btn-primary rounded-pill"><i
+                                class="bi bi-plus-lg"></i>
                             Tambah Baru</a>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table" id="jenisCutiTable">
+                        <table class="table" id="normaCutiTable">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Karyawan</th>
                                     <th>Jenis Cuti</th>
                                     <th>Cuti Maksimum Tahun ini</th>
                                     <th>Sisa Hari</th>
-                                    <th>Opsi</th>
                                 </tr>
                             </thead>
                         </table>
@@ -75,46 +64,46 @@
     <script src="{{ asset('mazer/assets/static/js/pages/form-element-select.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#jenisCutiTable').DataTable({
+            $('#normaCutiTable').DataTable({
                 processing: true,
                 serverside: true,
-                ajax: '{!! route('norma_cuti.getData') !!}',
+                ajax: {
+                    url: $('#filterForm').data('url'),
+                    data: function(d) {
+                        d.karyawan_id = $('#karyawan_id').val();
+                    }
+                },
                 columns: [{
-                    data: 'DT_RowIndex',
-                    name: 'DT_RowIndex',
-                    orderable: false,
-                    searchable: false
-                }, {
-                    data: 'karyawan',
-                    name: 'Nama Karyawan',
-                },
-                {
-                    data: 'jenis_cuti',
-                    name: 'Jenis Cuti',
-                    render: function(data, type, row) {
-                        return data ? data : '-';
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'jenis_cuti',
+                        name: 'Jenis Cuti',
+                        render: function(data, type, row) {
+                            return data ? data : '-';
+                        }
+                    },
+                    {
+                        data: 'cuti_max',
+                        name: 'Jumlah Hari Maksimum',
+                        render: function(data, type, row) {
+                            return data ? data + " Hari" : "0 Hari";
+                        }
+                    },
+                    {
+                        data: 'jml_hari',
+                        name: 'Jumlah Hari',
+                        render: function(data, type, row) {
+                            return data ? data + " Hari" : "0 Hari";
+                        }
                     }
-                },
-                {
-                    data: 'cuti_max',
-                    name: 'Jumlah Hari Maksimum',
-                    render: function(data, type, row) {
-                        return data ? data : 0;
-                    }
-                },
-                {
-                    data: 'jml_hari',
-                    name: 'Jumlah Hari',
-                    render: function(data, type, row) {
-                        return data ? data : '-';
-                    }
-                },
-                {
-                    data: 'opsi',
-                    name: 'Opsi',
-                    orderable: false,
-                    searchable: false
-                }]
+                ]
+            });
+            $('#karyawan_id').on('change', function() {
+                $('#normaCutiTable').DataTable().ajax.reload();
             });
         });
 

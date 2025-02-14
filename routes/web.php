@@ -25,6 +25,7 @@ Route::controller(AuthenticationController::class)->group(function(){
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/beranda', [HomeController::class, 'index'])->name('home');
+    Route::get('/beranda/getCount', [HomeController::class, 'countData'])->name('home.getCount');
 
     Route::controller(JabatanController::class)->group(function(){
         Route::get('/jabatan', 'index')->name('jabatan.index');
