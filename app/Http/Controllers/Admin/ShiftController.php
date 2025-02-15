@@ -8,6 +8,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ShiftStoreRequest;
 use App\Http\Requests\ShiftUpdateRequest;
+use App\ResponseMessages;
 use Illuminate\Validation\ValidationException;
 
 class ShiftController extends Controller
@@ -49,7 +50,7 @@ class ShiftController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil disimpan',
+                    'message' => ResponseMessages::TambahDataBerhasil,
                 ],
                 200,
             );
@@ -65,7 +66,7 @@ class ShiftController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::TambahDataGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -89,7 +90,7 @@ class ShiftController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil diupdate',
+                    'message' => ResponseMessages::UpdateBerhasil,
                 ],
                 200,
             );
@@ -105,7 +106,7 @@ class ShiftController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat mengupdate data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::UpdateGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -119,7 +120,7 @@ class ShiftController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil dihapus',
+                    'message' => ResponseMessages::DeleteBerhasil,
                 ],
                 200,
             );
@@ -127,7 +128,7 @@ class ShiftController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menghapus data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::DeleteGagal . $th->getMessage(),
                 ],
                 500,
             );

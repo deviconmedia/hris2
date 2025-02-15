@@ -29,9 +29,9 @@
                         <form method="post" id="createForm" data-parsley-validate enctype="multipart/form-data">
                             <div class="form-group mandatory">
                                 <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
-                                <select name="karyawan_id" id="karyawan_id" class="form-select choices">
+                                <select name="karyawan_id" id="karyawan_id" class="form-select choices" required>
                                     @foreach ($data['staffs'] as $staff)
-                                        <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
+                                        <option value="{{ $staff->id }}" {{ $data['currentStaffId'] == $staff->id ? 'selected' : '' }}>{{ $staff->nama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -40,11 +40,21 @@
                                 <label for="jenis_cuti_id" class="form-label">Pilih Jenis Cuti</label>
                                 <select name="jenis_cuti_id" id="jenis_cuti_id" class="form-select choices"
                                     data-parsley-required="true">
-                                    @foreach ($data['jenisCuti'] as $cuti)
-                                        <option value="{{ $cuti->id }}">{{ $cuti->nama_cuti }}</option>
+                                    @foreach ($data['normaCuti'] as $normaCuti)
+                                        <option value="{{ $normaCuti->jenisCuti->id }}">{{ $normaCuti->jenisCuti->nama_cuti }}</option>
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="form-group mandatory">
+                                <label for="send_to" class="form-label">Serahkan Ke</label>
+                                <select name="send_to" id="send_to" class="form-select choices" required>
+                                    @foreach ($data['staffs'] as $staff)
+                                        <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
                             <div class="form-group mandatory">
                                 <label for="tgl_mulai" class="form-label">Tanggal Mulai</label>
                                 <input type="date" name="tgl_mulai" id="tgl_mulai" class="form-control" required>

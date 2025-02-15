@@ -34,6 +34,7 @@
                                     <th>#</th>
                                     <th>Subjek</th>
                                     <th>Nama</th>
+                                    <th>Penyetuju</th>
                                     <th>Mulai Tanggal</th>
                                     <th>Tanggal Selesai</th>
                                     <th>Keterangan</th>
@@ -69,6 +70,10 @@
                 {
                     data: 'nama_karyawan',
                     name: 'Nama Karyawan',
+                },
+                {
+                    data: 'send_to',
+                    name: 'Penyetuju',
                 },
                 {
                     data: 'tgl_mulai',

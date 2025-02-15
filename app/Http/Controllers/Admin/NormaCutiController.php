@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NormaCutiStoreRequest;
+use App\ResponseMessages;
 
 class NormaCutiController extends Controller
 {
@@ -24,7 +25,7 @@ class NormaCutiController extends Controller
         $staffId = $request->input('karyawan_id');
         $currentStaff = auth()->user()->karyawan->id;
 
-        $normaCuti = NormaCuti::query(); // Mulai query builder
+        $normaCuti = NormaCuti::query();
 
         if ($staffId) {
             $normaCuti->where('karyawan_id', $staffId);
@@ -32,7 +33,7 @@ class NormaCutiController extends Controller
             $normaCuti->where('karyawan_id', $currentStaff);
         }
 
-        $normaCuti = $normaCuti->get(); // Dapatkan hasil akhir dari query
+        $normaCuti = $normaCuti->get();
 
         return DataTables::of($normaCuti)
             ->addIndexColumn()
@@ -72,14 +73,14 @@ class NormaCutiController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Data berhasil ditambahkan!'
+                'message' => ResponseMessages::TambahDataBerhasil
             ], 200);
 
 
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan data.' . $th->getMessage()
+                'message' => ResponseMessages::TambahDataGagal . $th->getMessage()
             ], 500);
         }
     }

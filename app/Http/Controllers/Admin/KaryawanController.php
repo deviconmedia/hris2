@@ -13,6 +13,7 @@ use App\Http\Requests\ChangeProfileImageRequest;
 use App\Http\Requests\KaryawanStoreRequest;
 use App\Http\Requests\KaryawanUpdateRequest;
 use App\Models\User;
+use App\ResponseMessages;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\ValidationException;
@@ -138,7 +139,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil disimpan',
+                    'message' => ResponseMessages::TambahDataBerhasil,
                 ],
                 200,
             );
@@ -154,7 +155,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::TambahDataGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -229,7 +230,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil diubah',
+                    'message' => ResponseMessages::UpdateBerhasil,
                 ],
                 200,
             );
@@ -245,7 +246,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat mengubah data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::UpdateGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -265,7 +266,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Password berhasil diubah',
+                    'message' => ResponseMessages::UpdatePasswordBerhasil,
                 ],
                 200,
             );
@@ -281,7 +282,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat mengubah password: ' . $th->getMessage(),
+                    'message' => ResponseMessages::UpdatePasswordGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -305,7 +306,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Status berhasil diubah',
+                    'message' => ResponseMessages::UpdateStatusBerhasil,
                 ],
                 200,
             );
@@ -313,7 +314,7 @@ class KaryawanController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat mengubah status: ' . $th->getMessage(),
+                    'message' => ResponseMessages::UpdateStatusGagal . $th->getMessage(),
                 ],
                 500,
             );

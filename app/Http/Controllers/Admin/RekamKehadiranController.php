@@ -9,6 +9,7 @@ use App\Models\RekamKehadiran;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RekamKehadiranStoreRequest;
+use App\ResponseMessages;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class RekamKehadiranController extends Controller
@@ -71,7 +72,7 @@ class RekamKehadiranController extends Controller
             if(is_null($validated['latitude']) || is_null($validated['longitude'])){
                 return response()->json([
                     'success' => false,
-                    'message' => 'Lokasi tidak ditemukan',
+                    'message' => ResponseMessages::LokasiTidakDitemukan,
                 ], 200);
             }
 
@@ -81,7 +82,7 @@ class RekamKehadiranController extends Controller
             if(!$shift){
                 return response()->json([
                     'success' => false,
-                    'message' => 'Shift tidak ditemukan',
+                    'message' => ResponseMessages::ShiftTidakDitemukan,
                 ], 200);
             }
 

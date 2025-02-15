@@ -30,12 +30,20 @@ class PengajuanCuti extends Model
         'tgl_selesai',
         'status',
         'catatan',
-        'lampiran'
+        'lampiran',
+        'send_to',
+        'approved_at',
+        'approved_by'
     ];
 
     public function karyawan(): BelongsTo
     {
         return $this->belongsTo(Karyawan::class);
+    }
+
+    public function sendTo(): BelongsTo
+    {
+        return $this->belongsTo(Karyawan::class, 'send_to', 'id');
     }
 
     public function jenisCuti(): BelongsTo

@@ -8,6 +8,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JenisCutiStoreRequest;
 use App\Http\Requests\JenisCutiUpdateRequest;
+use App\ResponseMessages;
 use Illuminate\Validation\ValidationException;
 
 class JenisCutiController extends Controller
@@ -48,7 +49,7 @@ class JenisCutiController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Data berhasil disimpan'
+                'message' => ResponseMessages::TambahDataBerhasil
             ], 200);
 
         } catch (ValidationException $e) {
@@ -63,7 +64,7 @@ class JenisCutiController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::TambahDataGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -85,7 +86,7 @@ class JenisCutiController extends Controller
             $update = JenisCuti::findOrFail($id)->update($validated);
             return response()->json([
                 'success' => true,
-                'message' => 'Data berhasil diperbarui'
+                'message' => ResponseMessages::UpdateBerhasil
             ], 200);
         } catch (ValidationException $e) {
             return response()->json(
@@ -100,7 +101,7 @@ class JenisCutiController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::UpdateGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -113,14 +114,14 @@ class JenisCutiController extends Controller
             $delete = JenisCuti::findOrFail($id)->delete();
             return response()->json([
                 'success' => true,
-                'message' => 'Data berhasil dihapus'
+                'message' => ResponseMessages::DeleteBerhasil
             ], 200);
 
         } catch (\Throwable $th) {
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menghapus data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::DeleteGagal . $th->getMessage(),
                 ],
                 500,
             );

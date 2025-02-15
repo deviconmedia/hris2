@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ResponseMessages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PengajuanCutiStoreRequest;
 use App\Models\JenisCuti;
@@ -31,7 +32,10 @@ class PengajuanCutiController extends Controller
         if ($staffId) {
             $pengajuanCuti->where('karyawan_id', $staffId);
         } else {
-            $pengajuanCuti->where('karyawan_id', $currentStaff);
+            $pengajuanCuti->where(function($query) use ($currentStaff) {
+                $query->where('karyawan_id', $currentStaff)
+                      ->orWhere('send_to', $currentStaff);
+            });
         }
 
         $pengajuanCuti = $pengajuanCuti->get();
@@ -53,6 +57,9 @@ class PengajuanCutiController extends Controller
             ->addColumn('tgl_pengajuan', function($pengajuanCuti){
                 return date('d-m-Y', strtotime($pengajuanCuti->tgl_pengajuan)) ;
             })
+            ->addColumn('send_to', function($pengajuanCuti){
+                return $pengajuanCuti->sendTo->nama ?? 'Tidak Diketahui';
+            })
             ->addColumn('opsi', function ($pengajuanCuti) {
                 $showUrl = route('pengajuan_cuti.show', $pengajuanCuti->id);
                 return '
@@ -65,7 +72,8 @@ class PengajuanCutiController extends Controller
 
     public function create()
     {
-        $data['jenisCuti'] = JenisCuti::get(['id', 'nama_cuti']);
+        $data['currentStaffId'] = auth()->user()->karyawan->id;
+        $data['normaCuti'] = NormaCuti::where('karyawan_id', $data['currentStaffId'])->get();
         $data['staffs'] = Karyawan::where('status', 1)->get(['id', 'nama']);
 
         return view('adminpanel.cuti.pengajuan_cuti.create', compact('data'));
@@ -128,7 +136,7 @@ class PengajuanCutiController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil disimpan',
+                    'message' => ResponseMessages::TambahDataBerhasil,
                 ],
                 200,
             );
@@ -148,7 +156,7 @@ class PengajuanCutiController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::TambahDataGagal . $th->getMessage(),
                 ],
                 500,
             );
