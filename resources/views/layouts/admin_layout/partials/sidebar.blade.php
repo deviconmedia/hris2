@@ -112,8 +112,8 @@
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="component-accordion.html" class="submenu-link">Pengajuan Cuti</a>
+                        <li class="submenu-item {{ request()->is('cuti/pengajuan_cuti') || request()->is('cuti/pengajuan_cuti/*') ? 'active' : '' }}">
+                            <a href="{{ route('pengajuan_cuti.index') }}" class="submenu-link">Pengajuan Cuti</a>
 
                         </li>
 

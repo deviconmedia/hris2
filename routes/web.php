@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisCutiController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\NormaCutiController;
+use App\Http\Controllers\Admin\PengajuanCutiController;
 use App\Http\Controllers\Admin\RekamKehadiranController;
 use App\Http\Controllers\Admin\ShiftController;
 use App\Http\Controllers\AuthenticationController;
@@ -100,6 +101,14 @@ Route::group(['middleware' => ['auth']], function(){
             Route::get('/norma_cuti/get_data', 'getData')->name('norma_cuti.getData');
             Route::get('/norma_cuti/tambah', 'create')->name('norma_cuti.create');
             Route::post('/norma_cuti/tambah', 'store')->name('norma_cuti.store');
+        });
+
+        Route::controller(PengajuanCutiController::class)->group(function(){
+            Route::get('/pengajuan_cuti', 'index')->name('pengajuan_cuti.index');
+            Route::get('/pengajuan_cuti/get_data', 'getData')->name('pengajuan_cuti.getData');
+            Route::get('/pengajuan_cuti/tambah', 'create')->name('pengajuan_cuti.create');
+            Route::post('/pengajuan_cuti/tambah', 'store')->name('pengajuan_cuti.store');
+            Route::get('/pengajuan_cuti/detail/{id}', 'show')->name('pengajuan_cuti.show');
         });
 
     });

@@ -17,23 +17,23 @@
         <div class="alert alert-info">
             <p>Data norma cuti yang ditampilkan adalah norma cuti tahun berjalan untuk semua pegawai.</p>
         </div>
+        <form id="filterForm" method="GET" data-url="{{ route('norma_cuti.getData') }}">
+            <div class="row my-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
+                        <select name="karyawan_id" id="karyawan_id" class="form-select choices">
+                            @foreach ($data['staffs'] as $staff)
+                                <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
         <div class="card">
             <div class="card-header">
                 <div class="card-header-action">
-                    <form id="filterForm" method="GET" data-url="{{ route('norma_cuti.getData') }}">
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
-                                    <select name="karyawan_id" id="karyawan_id" class="form-select choices">
-                                        @foreach ($data['staffs'] as $staff)
-                                            <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                     <div class="d-flex justify-content-end">
                         <a href="{{ route('norma_cuti.create') }}" class="btn btn-primary rounded-pill"><i
                                 class="bi bi-plus-lg"></i>
