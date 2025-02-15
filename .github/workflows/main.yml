@@ -1,48 +1,31 @@
-name: Publish Laravel to CyberPanel
+name: Publish Website to Cyberpanel
 on:
   push:
     branches:
       - main
-
 jobs:
-  SFTP-Deploy:
-    name: SFTP Deploy
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v2.1.0
       with:
         fetch-depth: 2 
-
     - name: Build assets
       run: npm install && npm run build
 
     - name: Install PHP and Composer
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2' # Sesuaikan dengan versi PHP di server
-        tools: 'composer'
+          php-version: '8.2' # Adjust to match the PHP version used by your Laravel project
+          tools: 'composer'
 
     - name: Install PHP dependencies
       run: composer install --no-dev --optimize-autoloader
-
-    - name: Setup SSH Key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -p 2222 -H ${{ secrets.SERVER }} >> ~/.ssh/known_hosts
-
-    - name: Deploy Laravel via SFTP (rsync)
-      run: |
-        rsync -avz --delete -e "ssh -p 2222" ./ hrisd7947@${{ secrets.SERVER }}:/home/hris-demo.iconmedia.id
-
-    - name: Set Laravel Storage & Permissions
-      run: |
-        ssh -p 2222 hrisd7947@${{ secrets.SERVER }} << 'EOF'
-          cd /home/hris-demo.iconmedia.id
-          chmod -R 775 storage bootstrap/cache
-          chown -R admin_deployer:admin_deployer storage bootstrap/cache
-          rm -rf public_html
-          ln -s /home/hris-demo.iconmedia.id/public public_html
-        EOF
+        
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.SERVER }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
