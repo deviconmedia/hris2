@@ -127,7 +127,7 @@ class PengajuanCutiController extends Controller
                     File::makeDirectory($destinationPath, 0755, true);
                 }
                 $image->move($destinationPath, $fileName);
-                $validated['lampiran'] = $destinationPath . $fileName;
+                $validated['lampiran'] = 'uploads/cuti/files/' . $fileName;
             }
             $validated['tgl_pengajuan'] = Carbon::now()->format('Y-m-d');
 
@@ -161,6 +161,13 @@ class PengajuanCutiController extends Controller
                 500,
             );
         }
+    }
+
+    public function show($id)
+    {
+        $data = PengajuanCuti::findOrFail($id);
+
+        return view('adminpanel.cuti.pengajuan_cuti.show', compact('data'));
     }
 
 }
