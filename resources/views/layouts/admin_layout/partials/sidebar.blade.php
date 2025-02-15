@@ -80,7 +80,7 @@
 
                     </ul>
                 </li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub {{ request()->is('presensi') || request()->is('presensi/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-clock-fill"></i>
                         <span>Presensi</span>
@@ -88,32 +88,37 @@
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
+                        <li class="submenu-item {{ request()->is('presensi/rekam') ? 'active' : '' }}">
                             <a href="{{ route('presensi.index') }}" class="submenu-link">Rekam Kehadiran</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Presensi Saya</a>
+                        <li class="submenu-item {{ request()->is('presensi/ringkasan') || request()->is('presensi/ringkasan/*') ? 'active' : '' }}">
+                            <a href="{{ route('presensi.myAttendances') }}" class="submenu-link">Presensi Saya</a>
                         </li>
 
                     </ul>
                 </li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item has-sub {{ request()->is('cuti') || request()->is('cuti/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-bell-slash-fill"></i>
-                        <span>Leave & Cuti</span>
+                        <span>Cuti</span>
                     </a>
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
-                            <a href="component-accordion.html" class="submenu-link">Pengajuan Cuti</a>
+                        <li class="submenu-item  {{ request()->is('cuti/jenis_cuti') || request()->is('cuti/jenis_cuti/*') ? 'active' : '' }}">
+                            <a href="{{ route('jenis_cuti.index') }}" class="submenu-link">Jenis Cuti</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Norma Cuti</a>
+                        <li class="submenu-item {{ request()->is('cuti/pengajuan_cuti') || request()->is('cuti/pengajuan_cuti/*') ? 'active' : '' }}">
+                            <a href="{{ route('pengajuan_cuti.index') }}" class="submenu-link">Pengajuan Cuti</a>
+
+                        </li>
+
+                        <li class="submenu-item {{ request()->is('cuti/norma_cuti') || request()->is('cuti/norma_cuti/*') ? 'active' : '' }} ">
+                            <a href="{{ route('norma_cuti.index') }}" class="submenu-link">Norma Cuti</a>
 
                         </li>
 
@@ -193,7 +198,7 @@
                         </li>
 
                         <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link text-danger">Logout</a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal" class="submenu-link text-danger">Logout</a>
 
                         </li>
 

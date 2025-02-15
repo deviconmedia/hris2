@@ -53,9 +53,6 @@
                 }, {
                     data: 'nama_shift',
                     name: 'Nama Shift',
-                    render: function(data, type, row) {
-                        return data.charAt(0).toUpperCase() + data.slice(1).toLowerCase();
-                    }
                 },
                 {
                     data: 'jam_mulai',
@@ -83,9 +80,9 @@
                     name: 'Status',
                     render: function(data, type, row) {
                         if (data == 1) {
-                            return '<span class="badge bg-success">Aktif</span>';
+                            return '<span class="text-success"><i class="bi bi-check-circle-fill"></i> Aktif</span>';
                         } else {
-                            return '<span class="badge bg-danger">Tidak Aktif</span>';
+                            return '<span class="text-danger"><i class="bi bi-x-circle"></i> Tidak Aktif</span>';
                         }
                     }
                 }, {

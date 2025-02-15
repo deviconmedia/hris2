@@ -132,8 +132,8 @@
                             </div>
                             <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary mx-2" id="saveBtn"><i class="bi bi-floppy-fill"></i> Simpan</button>
-                                    <a href="{{ route('karyawan.show', $karyawan->id) }}" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Kembali</a>
+                                    <button type="submit" class="btn btn-primary mx-2" id="saveBtn"><i class="bi bi-send"></i> Kirim</button>
+                                    <a href="{{ route('karyawan.show', $karyawan->id) }}" class="btn btn-danger"><i class="bi bi-x-lg"></i> Batalkan</a>
                                 </div>
                             </div>
                         </form>
@@ -157,6 +157,7 @@
 
         $('#createForm').on('submit', function(e) {
             e.preventDefault();
+            var id = $('#id').val();
             var formData = {
                 nama: $('#nama').val(),
                 nik: $('#nik').val(),
@@ -173,7 +174,7 @@
             };
 
             $.ajax({
-                url: '{{ route('karyawan.update', $karyawan->id) }}',
+                url: `{{ url('karyawan/edit/${id}') }}`,
                 type: 'PATCH',
                 data: formData,
                 beforeSend: function() {

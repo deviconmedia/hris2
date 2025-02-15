@@ -141,8 +141,7 @@
                                 class="form-control" placeholder="Ulangi Kata Sandi" required autocomplete="off">
                             <small id="password_error"></small>
                         </div>
-                        <button type="submit" class="btn btn-primary" id="saveBtn"><i class="bi bi-floppy-fill"></i>
-                            Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn"><i class="bi bi-send"></i> Kirim</button>
                     </form>
                 </div>
             </div>
@@ -166,9 +165,9 @@
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary"><i class="bi bi-cloud-arrow-up"></i>
-                                Simpan</button>
-                            <button type="button" class="btn btn-secondary" id="cancelChangeImage"><i
-                                    class="bi bi-x-lg"></i> Batal</button>
+                                Unggah</button>
+                            <button type="button" class="btn btn-danger" id="cancelChangeImage"><i
+                                    class="bi bi-x-lg"></i> Batalkan</button>
                         </div>
                     </form>
                 </div>

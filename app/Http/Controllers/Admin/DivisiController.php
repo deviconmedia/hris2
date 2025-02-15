@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ResponseMessages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DivisiStoreRequest;
 use App\Http\Requests\DivisiUpdateRequest;
@@ -26,8 +27,8 @@ class DivisiController extends Controller
             ->addColumn('opsi', function ($divisi) {
                 $editUrl = route('divisi.edit', $divisi->id);
                 return '
-                    <a href="' . $editUrl . '" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="deleteData(' . $divisi->id . ')">Hapus</button>
+                    <a href="' . $editUrl . '" class="btn btn-outline-primary btn-sm">Edit</a>
+                    <button class="btn btn-outline-danger btn-sm" onclick="deleteData(' . $divisi->id . ')">Hapus</button>
                 ';
             })
             ->rawColumns(['opsi'])
@@ -49,7 +50,7 @@ class DivisiController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil disimpan',
+                    'message' => ResponseMessages::TambahDataBerhasil,
                 ],
                 200,
             );
@@ -65,7 +66,7 @@ class DivisiController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::TambahDataGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -89,7 +90,7 @@ class DivisiController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil diupdate',
+                    'message' => ResponseMessages::UpdateBerhasil,
                 ],
                 200,
             );
@@ -105,7 +106,7 @@ class DivisiController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat mengupdate data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::UpdateGagal . $th->getMessage(),
                 ],
                 500,
             );
@@ -119,7 +120,7 @@ class DivisiController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'message' => 'Data berhasil dihapus',
+                    'message' => ResponseMessages::DeleteBerhasil,
                 ],
                 200,
             );
@@ -127,7 +128,7 @@ class DivisiController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Terjadi kesalahan saat menghapus data: ' . $th->getMessage(),
+                    'message' => ResponseMessages::DeleteGagal . $th->getMessage(),
                 ],
                 500,
             );
