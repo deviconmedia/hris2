@@ -14,10 +14,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Iconmedia',
-            'email' => 'dev.iconmedia@gmail.com',
+            'name' => 'Efron Paduansi',
+            'email' => 'eufrondpaduansi@iconmedia.co.id',
             'password' => bcrypt('password'),
-            'phone' => '081234567892',
+            'phone' => '081359856450',
             'role_id' => 1,
         ]);
     }

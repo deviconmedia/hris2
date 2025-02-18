@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('npwp')->nullable();
             $table->string('alamat');
             $table->date('tgl_gabung');
-            $table->foreignId('divisi_id')->constrained('divisi');
-            $table->foreignId('jabatan_id')->constrained('jabatan');
+            $table->foreignId('divisi_id')->nullable()->constrained('divisi');
+            $table->foreignId('jabatan_id')->nullable()->constrained('jabatan');
             $table->boolean('status')->default(true);
             $table->string('image_uri')->default('https://placehold.co/200');
             $table->softDeletes();
