@@ -36,6 +36,9 @@
                         </div>
                         <div class="d-grid"><button class="btn btn-primary btn-lg" id="loginBtn" type="submit">Login</button></div>
                     </form>
+                    <p class="text-center my-3">
+                        <a href="{{ route('index') }}">Kembali ke beranda</a>
+                    </p>
                 </div>
             </div>
         </div>
