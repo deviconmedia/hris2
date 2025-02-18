@@ -24,7 +24,6 @@ class KaryawanSeeder extends Seeder
             'jenis_kelamin' => 'L',
             'alamat' => 'Pamulang',
             'tgl_gabung' => '2022-10-20',
-            ''
         ]);
     }
 }
