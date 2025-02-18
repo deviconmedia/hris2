@@ -42,13 +42,13 @@
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" id="status" class="form-select" required>
                                     <option value="1" {{ $shift->status == 1 ? 'selected' : '' }}>Aktif</option>
-                                    <option value="1" {{ $shift->status == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                                    <option value="0" {{ $shift->status == 0 ? 'selected' : '' }}>Tidak Aktif</option>
                                 </select>
                             </div>
                             <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary mx-2" id="saveBtn"><i class="bi bi-floppy-fill"></i> Simpan</button>
-                                    <a href="{{ route('shifts.index') }}" class="btn btn-secondary"><i class="bi bi-x-lg"></i> Kembali</a>
+                                    <button type="submit" class="btn btn-primary mx-2" id="saveBtn"><i class="bi bi-send"></i> Kirim</button>
+                                    <a href="{{ route('shifts.index') }}" class="btn btn-danger"><i class="bi bi-x-lg"></i> Batalkan</a>
                                 </div>
                             </div>
                         </form>

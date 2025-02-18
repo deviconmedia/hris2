@@ -7,41 +7,39 @@
 @section('content')
     <div class="col-12 col-lg-9">
         <div class="row">
-            <div class="col-6 col-lg-3 col-md-6">
+            <div class="col-6 col-lg-6 col-md-6">
                 <div class="card">
                     <div class="card-body px-4 py-4-5">
                         <div class="row">
                             <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                <div class="stats-icon purple mb-2">
-                                    <i class="iconly-boldShow"></i>
-                                </div>
+                                <h1> <i class="bi bi-people"></i></h1>
                             </div>
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                <h6 class="text-muted font-semibold">Profile Views</h6>
+                                <h6 class="text-muted font-semibold">Checkin Hari ini</h6>
                                 <h6 class="font-extrabold mb-0">112.000</h6>
+                                <small class="text-muted">5/43 sudah checkin</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-lg-3 col-md-6">
+            <div class="col-6 col-lg-6 col-md-6">
                 <div class="card">
                     <div class="card-body px-4 py-4-5">
                         <div class="row">
                             <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                <div class="stats-icon blue mb-2">
-                                    <i class="iconly-boldProfile"></i>
-                                </div>
+                                <h1> <i class="bi bi-calendar-check"></i></h1>
                             </div>
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                <h6 class="text-muted font-semibold">Followers</h6>
+                                <h6 class="text-muted font-semibold">Pengajuan Cuti</h6>
                                 <h6 class="font-extrabold mb-0">183.000</h6>
+                                <small class="text-muted">3/7 sudah disetujui</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-lg-3 col-md-6">
+            {{-- <div class="col-6 col-lg-3 col-md-6">
                 <div class="card">
                     <div class="card-body px-4 py-4-5">
                         <div class="row">
@@ -74,170 +72,48 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card shadow">
                     <div class="card-header">
-                        <h4>Profile Visit</h4>
+                        <h4><i class="fas fa-user-clock"></i> Rekam Kehadiran</h4>
                     </div>
                     <div class="card-body">
-                        <div id="chart-profile-visit"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 col-xl-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Profile Visit</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-7">
-                                <div class="d-flex align-items-center">
-                                    <svg class="bi text-primary" width="32" height="32" fill="blue"
-                                        style="width:10px">
-                                        <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
-                                    </svg>
-                                    <h5 class="mb-0 ms-3">Europe</h5>
-                                </div>
+                        <h1 class="clock text-primary text-center" id="clock2"></h1>
+                        @if (empty($data['absen']['jam_masuk']) && empty($data['absen']['jam_pulang']))
+                            <div class="text-center mb-5">
+                                <p class="badge bg-danger">Anda belum check-in hari ini</p>
                             </div>
-                            <div class="col-5">
-                                <h5 class="mb-0 text-end">862</h5>
+                        @else
+                            <h6>Status Kehadiran:
+                                <span
+                                    class="badge bg-{{ $data['absen']['status'] == 1 ? 'success' : ($data['absen']['status'] == 2 ? 'danger' : ($data['absen']['status'] == 3 ? 'warning' : 'warning')) }}">
+                                    {{ $data['absen']['status'] == 1
+                                        ? 'Sudah Absen'
+                                        : ($data['absen']['status'] == 2
+                                            ? 'Terlambat'
+                                            : ($data['absen']['status'] == 3
+                                                ? 'Tidak Ada'
+                                                : 'Tidak Diketahui')) }}
+                                </span>
+                            </h6>
+                            <p>Absen Masuk: {{ $data['absen']['jam_masuk'] ?? 'Tidak Ada Data' }}</p>
+                            <p>Absen Pulang: {{ $data['absen']['jam_pulang'] ?? 'Tidak Ada Data' }}</p>
+                        @endif
+                        <form method="post" id="rekamForm">
+                            <div class="form-group">
+                                <label for="shift_id" class="form-label">Pilih Shift</label>
+                                <select name="shift_id" id="shift_id" class="form-select">
+                                    @foreach ($data['shifts'] as $shift)
+                                        <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-12">
-                                <div id="chart-europe"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-7">
-                                <div class="d-flex align-items-center">
-                                    <svg class="bi text-success" width="32" height="32" fill="blue"
-                                        style="width:10px">
-                                        <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
-                                    </svg>
-                                    <h5 class="mb-0 ms-3">America</h5>
-                                </div>
-                            </div>
-                            <div class="col-5">
-                                <h5 class="mb-0 text-end">375</h5>
-                            </div>
-                            <div class="col-12">
-                                <div id="chart-america"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-7">
-                                <div class="d-flex align-items-center">
-                                    <svg class="bi text-success" width="32" height="32" fill="blue"
-                                        style="width:10px">
-                                        <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
-                                    </svg>
-                                    <h5 class="mb-0 ms-3">India</h5>
-                                </div>
-                            </div>
-                            <div class="col-5">
-                                <h5 class="mb-0 text-end">625</h5>
-                            </div>
-                            <div class="col-12">
-                                <div id="chart-india"></div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-7">
-                                <div class="d-flex align-items-center">
-                                    <svg class="bi text-danger" width="32" height="32" fill="blue"
-                                        style="width:10px">
-                                        <use xlink:href="assets/static/images/bootstrap-icons.svg#circle-fill" />
-                                    </svg>
-                                    <h5 class="mb-0 ms-3">Indonesia</h5>
-                                </div>
-                            </div>
-                            <div class="col-5">
-                                <h5 class="mb-0 text-end">1025</h5>
-                            </div>
-                            <div class="col-12">
-                                <div id="chart-indonesia"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-xl-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Latest Comments</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-lg">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Comment</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="col-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-md">
-                                                    <img src="./assets/compiled/jpg/5.jpg">
-                                                </div>
-                                                <p class="font-bold ms-3 mb-0">Si Cantik</p>
-                                            </div>
-                                        </td>
-                                        <td class="col-auto">
-                                            <p class=" mb-0">Congratulations on your graduation!</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-md">
-                                                    <img src="./assets/compiled/jpg/2.jpg">
-                                                </div>
-                                                <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                                            </div>
-                                        </td>
-                                        <td class="col-auto">
-                                            <p class=" mb-0">Wow amazing design! Can you make another tutorial for
-                                                this design?</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-md">
-                                                    <img src="./assets/compiled/jpg/8.jpg">
-                                                </div>
-                                                <p class="font-bold ms-3 mb-0">Singh Eknoor</p>
-                                            </div>
-                                        </td>
-                                        <td class="col-auto">
-                                            <p class=" mb-0">What a stunning design! You are so talented and creative!</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-md">
-                                                    <img src="./assets/compiled/jpg/3.jpg">
-                                                </div>
-                                                <p class="font-bold ms-3 mb-0">Rani Jhadav</p>
-                                            </div>
-                                        </td>
-                                        <td class="col-auto">
-                                            <p class=" mb-0">I love your design! It’s so beautiful and unique! How did you
-                                                learn to do this?</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            <button type="submit"
+                                class="btn btn-block btn-success rounded-pill shadow-lg mt-2">Rekam</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -248,18 +124,18 @@
             <div class="card-body py-4 px-4">
                 <div class="d-flex align-items-center">
                     <div class="avatar avatar-xl">
-                        <img src="./assets/compiled/jpg/1.jpg" alt="Face 1">
+                        <img src="{{ asset($data['currentUser']->image_uri) }}" alt="Face 1">
                     </div>
                     <div class="ms-3 name">
-                        <h5 class="font-bold">John Duck</h5>
-                        <h6 class="text-muted mb-0">@johnducky</h6>
+                        <h5 class="font-bold">{{ $data['currentUser']->name }}</h5>
+                        <small class="text-muted mb-0">{{ $data['currentUser']->karyawan->kode }}</small>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header">
-                <h4>Recent Messages</h4>
+                <h4>Aktivitas Terakhir</h4>
             </div>
             <div class="card-content pb-4">
                 <div class="recent-message d-flex px-4 py-3">
@@ -294,13 +170,49 @@
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h4>Visitors Profile</h4>
-            </div>
-            <div class="card-body">
-                <div id="chart-visitors-profile"></div>
-            </div>
-        </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+        //Set Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock2').innerText = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function getCountData() {
+            $.ajax({
+                url: '/dashboard/get-count/',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#employees').text(data.employees);
+                    $('#attendances').text(data.attendances);
+                    $('#activeUsers').text(data.activeUsers);
+                    $('#inactiveUsers').text(data.inactiveUsers);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error: ' + error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            getCountData();
+            setInterval(getCountData, 60000);
+        });
+
+    </script>
+@endpush

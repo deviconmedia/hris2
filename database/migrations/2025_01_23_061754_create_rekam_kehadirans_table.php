@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('shift_id')->constrained('shifts')->onDelete('cascade');
             $table->date('tgl_rekam');
             $table->time('jam_masuk');
-            $table->time('jam_pulang');
+            $table->time('jam_pulang')->nullable();
             $table->string('lokasi');
             $table->enum('status', ['hadir', 'terlambat', 'pulang cepat', 'absen']);
             $table->softDeletes();
