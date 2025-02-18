@@ -27,5 +27,10 @@ class UserRoleSeeder extends Seeder
             'role_name' => 'Staff',
             'Description' => 'Staff'
         ]);
+
+        Role::create([
+            'role_name' => 'Manager',
+            'Description' => 'Manager Role'
+        ]);
     }
 }
