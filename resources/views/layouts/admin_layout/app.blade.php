@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   {{-- Tambahkan ini untuk mencegah mix content --}}
-   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    {{-- Tambahkan ini untuk mencegah mix content --}}
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') - {{ env('APP_NAME') }}</title>
@@ -24,6 +24,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
+    {{-- CDN for toastr --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     <style>
         * {
             font-family: "Inter", serif;
@@ -140,6 +143,8 @@
     <script src="{{ asset('mazer/assets/static/js/pages/parsley.js') }}"></script>
     <script src="{{ asset('static/js/sweetalert2@11.js') }}"></script>
     <script src="{{ asset('static/js/moment.min.js') }}"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @stack('js')
 
     <script>
