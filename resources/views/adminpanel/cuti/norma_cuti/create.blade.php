@@ -15,7 +15,7 @@
 @section('content')
     <div class="col-12">
         <div class="row">
-            <div class="col-8 mx-auto">
+            <div class="col-12 col-md-8 col-lg-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
                         <form method="post" id="createForm" data-parsley-validate>
@@ -85,20 +85,16 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '{{ route('norma_cuti.index') }}';
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
                         });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('norma_cuti.index') }}';
+                        }, 1500);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
                         });
                     }
                 },
@@ -109,16 +105,14 @@
                         errorMessage = xhr.responseJSON.message;
                     }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
                     });
                 },
 
                 complete: function() {
-                    $('#saveBtn').prop('disabled', false).html('<i class="bi bi-floppy-fill"></i> Simpan');
+                    $('#saveBtn').prop('disabled', false).html('<i class="bi bi-send"></i> Kirim');
                 }
             });
         });

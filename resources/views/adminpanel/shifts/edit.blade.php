@@ -16,7 +16,7 @@
 @section('content')
     <div class="col-12">
         <div class="row">
-            <div class="col-8 mx-auto">
+            <div class="col-12 col-md-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
                         <form method="post" id="editForm" data-parsley-validate>

@@ -40,7 +40,7 @@
                         </tr>
                         <tr>
                             <th>Jam Pulang</th>
-                            <td>{{ $presensi->jam_pulang }}</td>
+                            <td>{{ $presensi->jam_pulang ?? "Tidak ada data" }}</td>
                         </tr>
                         <tr>
                             <th>Shift</th>
