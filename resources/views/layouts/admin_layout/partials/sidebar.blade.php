@@ -43,7 +43,7 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-                <a href="" class="btn btn-sm btn-success rounded-pill"><i class="bi bi-patch-check-fill"></i> Verifikasi Telegram</a>
+                <a href="" class="btn btn-sm btn-success rounded-pill"><i class="bi bi-patch-check-fill"></i> Verifikasi Telegram (Dev)</a>
                 <li class="sidebar-title">Menu</li>
 
                 <li class="sidebar-item {{ request()->is('beranda') ? 'active' : '' }}">
