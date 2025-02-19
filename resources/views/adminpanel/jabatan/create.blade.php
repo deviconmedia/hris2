@@ -64,20 +64,16 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '{{ route('jabatan.index') }}';
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
                         });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('jabatan.index') }}';
+                        }, 1500);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
                         });
                     }
                 },
@@ -88,16 +84,13 @@
                         errorMessage = xhr.responseJSON.message;
                     }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
                     });
                 },
 
                 complete: function() {
-                    $('#saveBtn').prop('disabled', false).html('<i class="bi bi-floppy-fill"></i> Simpan');
+                    $('#saveBtn').prop('disabled', false).html('<i class="bi bi-send"></i> Kirim');
                 }
             });
         });

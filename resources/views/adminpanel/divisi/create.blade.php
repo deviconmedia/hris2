@@ -27,8 +27,10 @@
                             </div>
                             <div class="row my-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary mx-2" id="saveBtn"><i class="bi bi-send"></i> Kirim</button>
-                                    <a href="{{ route('divisi.index') }}" class="btn btn-danger"><i class="bi bi-x-lg"></i> Batalkan</a>
+                                    <button type="submit" class="btn btn-primary mx-2" id="saveBtn"><i
+                                            class="bi bi-send"></i> Kirim</button>
+                                    <a href="{{ route('divisi.index') }}" class="btn btn-danger"><i class="bi bi-x-lg"></i>
+                                        Batalkan</a>
                                 </div>
                             </div>
                         </form>
@@ -41,7 +43,7 @@
 
 @push('js')
     <script>
-         $.ajaxSetup({
+        $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
@@ -65,20 +67,16 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '{{ route('divisi.index') }}';
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
                         });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('divisi.index') }}';
+                        }, 1500);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
                         });
                     }
                 },
@@ -89,16 +87,14 @@
                         errorMessage = xhr.responseJSON.message;
                     }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
                     });
                 },
 
                 complete: function() {
-                    $('#saveBtn').prop('disabled', false).html('<i class="bi bi-floppy-fill"></i> Simpan');
+                    $('#saveBtn').prop('disabled', false).html(
+                        '<i class="bi bi-send"></i> Kirim');
                 }
             });
         });
