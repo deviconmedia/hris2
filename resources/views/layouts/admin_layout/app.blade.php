@@ -154,7 +154,6 @@
 
             setTimeout(function() {
                 preloader.style.display = 'none';
-                content.style.display = 'block';
             }, 1000); // Waktu loading (dalam milidetik)
         });
     </script>

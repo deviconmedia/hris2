@@ -278,7 +278,7 @@
             }
         });
 
-
+        //Change password function
         $('#changePasswordForm').on('submit', function(e) {
             e.preventDefault();
             var formData = {
@@ -296,21 +296,16 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href =
-                                '{{ route('karyawan.show', $karyawan->id) }}';
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
                         });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('karyawan.show', $karyawan->id) }}';
+                        }, 1500);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
                         });
                     }
                 },
@@ -321,21 +316,19 @@
                         errorMessage = xhr.responseJSON.message;
                     }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
                     });
                 },
 
                 complete: function() {
                     $('#saveBtn').prop('disabled', false).html(
-                        '<i class="bi bi-floppy-fill"></i> Simpan');
+                        '<i class="bi bi-send"></i> Kirim');
                 }
             });
         });
 
+        //Change status function
         $('#changeStatusForm').on('submit', function(e) {
             e.preventDefault();
             var formData = {
@@ -352,21 +345,16 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href =
-                                '{{ route('karyawan.show', $karyawan->id) }}';
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
                         });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('karyawan.show', $karyawan->id) }}';
+                        }, 1500);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
                         });
                     }
                 },
@@ -377,11 +365,8 @@
                         errorMessage = xhr.responseJSON.message;
                     }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
                     });
                 },
 

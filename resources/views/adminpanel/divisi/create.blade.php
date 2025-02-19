@@ -94,7 +94,7 @@
 
                 complete: function() {
                     $('#saveBtn').prop('disabled', false).html(
-                        '<i class="bi bi-floppy-fill"></i> Simpan');
+                        '<i class="bi bi-send"></i> Kirim');
                 }
             });
         });
