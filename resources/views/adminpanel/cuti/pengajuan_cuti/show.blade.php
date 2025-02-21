@@ -56,10 +56,10 @@
                         <tr>
                             <th>Lampiran</th>
                             <td>
+                                <a href="{{ asset($data->lampiran) }}" target="_blank">Lihat Lampiran</a>
                             </td>
                         </tr>
                     </table>
-                    <img src="{{ asset($data->lampiran) }}" alt="lampiran">
                 </div>
             </div>
             <div class="card-footer">

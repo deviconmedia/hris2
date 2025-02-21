@@ -123,21 +123,17 @@
                         '<i class="fas fa-spinner fa-spin"></i> Sedang Menyimpan...');
                 },
                 success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '{{ route('norma_cuti.index') }}';
+                     if (response.success) {
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
                         });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('pengajuan_cuti.index') }}';
+                        }, 1500);
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
                         });
                     }
                 },
@@ -148,11 +144,8 @@
                         errorMessage = xhr.responseJSON.message;
                     }
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
                     });
                 },
 

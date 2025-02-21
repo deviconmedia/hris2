@@ -63,7 +63,16 @@ class PengajuanCutiController extends Controller
             ->addColumn('opsi', function ($pengajuanCuti) {
                 $showUrl = route('pengajuan_cuti.show', $pengajuanCuti->id);
                 return '
-                    <a href="' . $showUrl . '" class="btn btn-outline-primary btn-sm">Lihat</a>
+                    <div class="dropdown-center">
+                        <button class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Opsi
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="' . $showUrl . '"><i class="bi bi-info-circle"></i> Detail</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="rejectData(' . $pengajuanCuti->id . ')"><i class="bi bi-x-lg"></i> Tolak</a></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteData(' . $pengajuanCuti->id . ')"><i class="bi bi-trash"></i> Hapus</a></li>
+                        </ul>
+                    </div>
                 ';
             })
             ->rawColumns(['opsi'])
@@ -121,7 +130,7 @@ class PengajuanCutiController extends Controller
             if($request->hasFile('lampiran')){
                 $image = $request->file('lampiran');
                 $fileName = time() . rand(1000, 9999) . '_' . $image->getClientOriginalName();
-                $destinationPath = public_path('uploads/files/cuti');
+                $destinationPath = public_path('uploads/cuti/files');
 
                 if (!File::exists($destinationPath)) {
                     File::makeDirectory($destinationPath, 0755, true);
@@ -168,6 +177,59 @@ class PengajuanCutiController extends Controller
         $data = PengajuanCuti::findOrFail($id);
 
         return view('adminpanel.cuti.pengajuan_cuti.show', compact('data'));
+    }
+
+    public function approvedCuti($id)
+    {
+
+    }
+
+    public function rejectedCuti($id)
+    {
+        try {
+           $pengajuanCuti = PengajuanCuti::findOrFail($id)->update(['status' => 'ditolak']);
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => ResponseMessages::UpdateBerhasil,
+                ],
+                200,
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => ResponseMessages::UpdateGagal . $th->getMessage(),
+                ],
+                500,
+            );
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $delete = PengajuanCuti::findOrFail($id)->delete();
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => ResponseMessages::DeleteBerhasil,
+                ],
+                200,
+            );
+
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => ResponseMessages::DeleteGagal . $th->getMessage(),
+                ],
+                500,
+            );
+        }
+
     }
 
 }

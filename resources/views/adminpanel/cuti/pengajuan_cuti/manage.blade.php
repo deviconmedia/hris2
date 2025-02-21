@@ -113,6 +113,47 @@
             });
         });
 
+        // Reject Pengajuan cuti
+        function rejectData(id) {
+            Swal.fire({
+                title: 'Tolak pengajuan cuti ini?',
+                text: "Data yang ditolak tidak dapat diubah kembali!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, yakin!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/cuti/pengajuan_cuti/rejected/' + id,
+                        type: 'PATCH',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                toastr.success(response.message, 'Berhasil', {
+                                    timeOut: 3000
+                                });
+                                $('#pengajuanCutiTable').DataTable().ajax.reload();
+                            } else {
+                                toastr.error(response.message, 'Gagal', {
+                                    timeOut: 3000
+                                });
+                            }
+                        },
+                        error: function() {
+                            toastr.error("Ada kesalahan saat menghapus data", 'Gagal', {
+                                timeOut: 3000
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
         // Delete Data
         function deleteData(id) {
             Swal.fire({
@@ -127,33 +168,27 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/cuti/jenis_cuti/' + id,
+                        url: '/cuti/pengajuan_cuti/' + id,
                         type: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire(
-                                    'Dihapus!',
-                                    'Data berhasil dihapus.',
-                                    'success'
-                                );
+                                toastr.success(response.message, 'Berhasil', {
+                                    timeOut: 3000
+                                });
                                 $('#pengajuanCutiTable').DataTable().ajax.reload();
                             } else {
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data.',
-                                    'error'
-                                );
+                                toastr.error(response.message, 'Gagal', {
+                                    timeOut: 3000
+                                });
                             }
                         },
                         error: function() {
-                            Swal.fire(
-                                'Error!',
-                                'Terjadi kesalahan. Silakan coba lagi.',
-                                'error'
-                            );
+                            toastr.error("Ada kesalahan saat menghapus data", 'Gagal', {
+                                timeOut: 3000
+                            });
                         }
                     });
                 }

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pengajuan_cuti', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('karyawan_id')->constrained('karyawan');
-            $table->foreignId('jenis_cuti_id')->constrained('jenis_cuti');
+            $table->foreignId('karyawan_id')->constrained('karyawan')->cascadeOnDelete();
+            $table->foreignId('jenis_cuti_id')->constrained('jenis_cuti')->cascadeOnDelete();
             $table->date('tgl_pengajuan');
             $table->date('tgl_mulai');
             $table->date('tgl_selesai');

@@ -96,26 +96,20 @@
                         },
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire(
-                                    'Dihapus!',
-                                    'Data berhasil dihapus.',
-                                    'success'
-                                );
-                                $('#jenisCutiTable').DataTable().ajax.reload();
+                                toastr.success(response.message, 'Berhasil', {
+                                    timeOut: 3000
+                                });
+                                $('#jenisCutiTable').DataTable().ajax.reload(); // Reload tabel DataTables
                             } else {
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Terjadi kesalahan saat menghapus data.',
-                                    'error'
-                                );
+                                toastr.error(response.message, 'Gagal', {
+                                    timeOut: 3000
+                                });
                             }
                         },
                         error: function() {
-                            Swal.fire(
-                                'Error!',
-                                'Terjadi kesalahan. Silakan coba lagi.',
-                                'error'
-                            );
+                            toastr.error("Ada kesalahan saat menghapus data", 'Gagal', {
+                                timeOut: 3000
+                            });
                         }
                     });
                 }
