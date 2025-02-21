@@ -20,6 +20,8 @@ class KaryawanSeeder extends Seeder
             'email' => 'eufrondpaduansi@iconmedia.co.id',
             'telepon' => '081359856450',
             'tempat_lahir' => 'Lento',
+            'divisi_id' => 1,
+            'jabatan_id' => 1,
             'tgl_lahir' => '1999-08-03',
             'jenis_kelamin' => 'L',
             'alamat' => 'Pamulang',
