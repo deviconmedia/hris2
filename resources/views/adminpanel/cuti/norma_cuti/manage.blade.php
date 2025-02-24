@@ -19,7 +19,7 @@
         </div>
         <form id="filterForm" method="GET" data-url="{{ route('norma_cuti.getData') }}">
             <div class="row my-3">
-                <div class="col-4">
+                <div class="col-6 col-md-4 col-lg-4">
                     <div class="form-group">
                         <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
                         <select name="karyawan_id" id="karyawan_id" class="form-select choices">

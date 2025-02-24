@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\RateLimiter;
+use Spatie\Activitylog\Facades\Activity;
 
 class AuthenticationController extends Controller
 {
@@ -31,10 +32,17 @@ class AuthenticationController extends Controller
             $blockKey = 'login_blocked_' . $email;
 
             if (Cache::has($blockKey)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Anda telah mencoba login terlalu banyak. Silakan coba lagi dalam 1 menit.',
-                ], 403);
+                Activity::event('Login blocked')
+                    ->withProperties(['email' => $email])
+                    ->log('Mencoba login terlalu banyak');
+
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Anda telah mencoba login terlalu banyak. Silakan coba lagi dalam 1 menit.',
+                    ],
+                    403,
+                );
             }
 
             $credentials = $request->validated();
@@ -46,20 +54,35 @@ class AuthenticationController extends Controller
 
                 if (!$user->is_active) {
                     Auth::logout();
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Akun Anda Tidak Aktif. Silahkan hubungi Administrator.',
-                    ], 403);
+
+                    Activity::causedBy($user)
+                        ->withProperties(['email' => $email])
+                        ->log('Login gagal: Akun tidak aktif');
+
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'message' => 'Akun Anda Tidak Aktif. Silahkan hubungi Administrator.',
+                        ],
+                        403,
+                    );
                 }
 
                 $request->session()->regenerate();
                 $clockNow = Carbon::now();
                 User::where('id', $user->id)->update(['last_logged' => $clockNow]);
 
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Login berhasil',
-                ], 200);
+                Activity::causedBy($user)
+                    ->withProperties(['email' => $email])
+                    ->log('User logged in successfully');
+
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => 'Login berhasil',
+                    ],
+                    200,
+                );
             }
 
             $attempts = Cache::get($cacheKey, 0) + 1;
@@ -67,24 +90,47 @@ class AuthenticationController extends Controller
 
             if ($attempts >= 5) {
                 Cache::put($blockKey, true, now()->addMinutes(1));
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Terlalu banyak percobaan login. Coba lagi dalam 1 menit.',
-                ], 403);
+
+                Activity::event('Login Blocked')
+                    ->withProperties(['email' => $email])
+                    ->log('User temporarily blocked due to too many failed login attempts');
+
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Terlalu banyak percobaan login. Coba lagi dalam 1 menit.',
+                    ],
+                    403,
+                );
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Email atau kata sandi salah.',
-            ], 403);
+            // **Catat log aktivitas login gagal**
+            Activity::event('Login Failed')
+                ->withProperties(['email' => $email, 'attempts' => $attempts])
+                ->log('Login failed: Incorrect credentials');
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Email atau kata sandi salah.',
+                ],
+                403,
+            );
         } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat mengirim data: ' . $th->getMessage(),
-            ], 500);
+
+            Activity::event('Login Error')
+            ->withProperties(['error' => $th->getMessage()])
+            ->log("Error during login attempt");
+
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat mengirim data: ' . $th->getMessage(),
+                ],
+                500,
+            );
         }
     }
-
 
     public function logout(Request $request): RedirectResponse
     {
@@ -96,5 +142,4 @@ class AuthenticationController extends Controller
 
         return redirect('/sign_in');
     }
-
 }
