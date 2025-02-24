@@ -62,18 +62,24 @@ class PengajuanCutiController extends Controller
             })
             ->addColumn('opsi', function ($pengajuanCuti) {
                 $showUrl = route('pengajuan_cuti.show', $pengajuanCuti->id);
-                return '
+                $opsi = '
                     <div class="dropdown-center">
                         <button class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Opsi
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="' . $showUrl . '"><i class="bi bi-info-circle"></i> Detail</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="rejectData(' . $pengajuanCuti->id . ')"><i class="bi bi-x-lg"></i> Tolak</a></li>
-                            <li><a class="dropdown-item text-danger" href="#" onclick="deleteData(' . $pengajuanCuti->id . ')"><i class="bi bi-trash"></i> Hapus</a></li>
+                            <li><a class="dropdown-item" href="' . $showUrl . '"><i class="bi bi-info-circle"></i> Detail</a></li>';
+
+                if ($pengajuanCuti->status == 'menunggu konfirmasi') {
+                    $opsi .= '<li><a class="dropdown-item text-danger" href="#" onclick="rejectData(' . $pengajuanCuti->id . ')"><i class="bi bi-x-lg"></i> Tolak</a></li>';
+                }
+
+                $opsi .= '<li><a class="dropdown-item text-danger" href="#" onclick="deleteData(' . $pengajuanCuti->id . ')"><i class="bi bi-trash"></i> Hapus</a></li>
                         </ul>
                     </div>
                 ';
+
+                return $opsi;
             })
             ->rawColumns(['opsi'])
             ->make(true);
@@ -181,7 +187,37 @@ class PengajuanCutiController extends Controller
 
     public function approvedCuti($id)
     {
+        try {
+            $data = PengajuanCuti::findOrFail($id);
+            $jmlHari = Carbon::parse($data->tgl_mulai)->diffInDays(Carbon::parse($data->tgl_selesai)) + 1;
+            $normaCuti = NormaCuti::where('karyawan_id', $data->karyawan_id)
+            ->where('jenis_cuti_id', $data->jenis_cuti_id)
+            ->first();
 
+            $sisaHari = $normaCuti->jml_hari - $jmlHari;
+            $normaCuti->update(['jml_hari' => $sisaHari]);
+            $pengajuanCuti = $data->update([
+                'status' => 'disetujui',
+                'approved_at' => Carbon::now()->format('Y-m-d, H:i:s'),
+                'approved_by' => auth()->user()->karyawan->id,
+            ]);
+
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => ResponseMessages::UpdateBerhasil,
+                ],
+                200,
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => ResponseMessages::UpdateGagal . $th->getMessage(),
+                ],
+                500,
+            );
+        }
     }
 
     public function rejectedCuti($id)

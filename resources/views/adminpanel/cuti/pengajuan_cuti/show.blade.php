@@ -31,7 +31,7 @@
                         </tr>
                         <tr>
                             <th>Penyetuju</th>
-                            <td>{{ $data->penyetuju->nama }}</td>
+                            <td>{{ $data->penyetuju->nama ?? 'Tidak diketahui' }}</td>
                         </tr>
                         <tr>
                             <th>Tanggal Dibuat</th>
@@ -56,83 +56,149 @@
                         <tr>
                             <th>Lampiran</th>
                             <td>
-                                <a href="{{ asset($data->lampiran) }}" target="_blank">Lihat Lampiran</a>
+                                <a href="{{ asset($data->lampiran) ?? '#' }}"
+                                    target="_blank">{{ $data->lampiran != null ? 'Lihat lampiran' : 'Tidak ada lampiran' }}</a>
                             </td>
                         </tr>
                     </table>
+                    @if ($data->status == 'menunggu konfirmasi')
+                        <button type="button" class="btn btn-sm btn-success" id="approvedBtn"
+                            onclick="approvedData({{ $data->id }})"><i class="bi bi-check-lg"></i> Setujui</button>
+                        <button type="button" class="btn btn-sm btn-danger" id="deleteBtn"
+                            onclick="deleteData({{ $data->id }})"><i class="bi bi-trash"></i> Hapus</button>
+                    @endif
                 </div>
             </div>
             <div class="card-footer">
                 <h5 class="text-title">Informasi Persetujuan</h5>
-                <small class="text-muted">Belum ada informasi</small>
+                @if ($data->status == 'menunggu konfirmasi')
+                    <small class="text-muted">Belum ada informasi</small>
+                @elseif($data->status == 'disetujui')
+                    <img src="{{ asset('static/img/approved.jpg') }}" alt="stempel" class="mb-2">
+                    <table class="table table-striped table-hover">
+                        <tr>
+                            <th>Status</th>
+                            <td class="text-primary text-capitalize">{{ $data->status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Terakhir Diperbarui Oleh:</th>
+                            <td>{{ $data->approvedBy->nama }}</td>
+                        </tr>
+                        <tr>
+                            <th>Diperbarui pada:</th>
+                            <td>{{ date('d-m-Y, H:i:s', strtotime($data->approved_at)) }}</td>
+                        </tr>
+                    </table>
+                @else
+                    <img src="{{ asset('static/img/rejected.JPG') }}" alt="stempel" class="mb-2" style="height: 10em; width: 10em;">
+                    <table class="table table-striped table-hover">
+                        <tr>
+                            <th>Status</th>
+                            <td class="text-primary text-capitalize">{{ $data->status }}</td>
+                        </tr>
+                        <tr>
+                            <th>Terakhir Diperbarui Oleh:</th>
+                            <td>{{ $data->approvedBy->nama }}</td>
+                        </tr>
+                        <tr>
+                            <th>Diperbarui pada:</th>
+                            <td>{{ date('d-m-Y, H:i:s', strtotime($data->approved_at)) }}</td>
+                        </tr>
+                    </table>
+                @endif
             </div>
         </div>
     </div>
 @endsection
 
 @push('js')
-    <script src="{{ asset('mazer/assets/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
-    <script src="{{ asset('mazer/assets/static/js/pages/form-element-select.js') }}"></script>
     <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $('#createForm').on('submit', function(e) {
-            e.preventDefault();
-
-            var formData = new FormData(this);
-            $.ajax({
-                url: '{{ route('pengajuan_cuti.store') }}',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function() {
-                    $('#saveBtn').prop('disabled', true).html(
-                        '<i class="fas fa-spinner fa-spin"></i> Sedang Menyimpan...');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '{{ route('norma_cuti.index') }}';
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: response.message,
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log(error);
-                    let errorMessage = 'Terjadi kesalahan saat mengirim data!';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Gagal!',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
+        // Approved Data
+        function approvedData(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda akan mengubah status pengajuan cuti menjadi 'Disetujui'!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/cuti/pengajuan_cuti/approved/' + id,
+                        type: 'PATCH',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                toastr.success(response.message, 'Berhasil', {
+                                    timeOut: 3000
+                                });
+                                setTimeout(() => {
+                                    window.location.href =
+                                        '{{ route('pengajuan_cuti.index') }}';
+                                }, 1000);
+                            } else {
+                                toastr.error(response.message, 'Gagal', {
+                                    timeOut: 3000
+                                });
+                            }
+                        },
+                        error: function() {
+                            toastr.error("Ada kesalahan saat mengubah data", 'Gagal', {
+                                timeOut: 3000
+                            });
+                        }
                     });
-                },
-
-                complete: function() {
-                    $('#saveBtn').prop('disabled', false).html(
-                        '<i class="bi bi-send"></i> Kirim');
                 }
             });
-        });
+        }
+
+        // Delete Data
+        function deleteData(id) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/cuti/pengajuan_cuti/' + id,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                toastr.success(response.message, 'Berhasil', {
+                                    timeOut: 3000
+                                });
+                                setTimeout(() => {
+                                    window.location.href =
+                                        '{{ route('pengajuan_cuti.index') }}';
+                                }, 1000);
+                            } else {
+                                toastr.error(response.message, 'Gagal', {
+                                    timeOut: 3000
+                                });
+                            }
+                        },
+                        error: function() {
+                            toastr.error("Ada kesalahan saat menghapus data", 'Gagal', {
+                                timeOut: 3000
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @endpush

@@ -47,6 +47,11 @@ class PengajuanCuti extends Model
         return $this->belongsTo(Karyawan::class, 'approver', 'id');
     }
 
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(Karyawan::class, 'approved_by', 'id');
+    }
+
     public function jenisCuti(): BelongsTo
     {
         return $this->belongsTo(JenisCuti::class);

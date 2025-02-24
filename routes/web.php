@@ -109,6 +109,7 @@ Route::group(['middleware' => ['auth']], function(){
             Route::get('/pengajuan_cuti/tambah', 'create')->name('pengajuan_cuti.create');
             Route::post('/pengajuan_cuti/tambah', 'store')->name('pengajuan_cuti.store');
             Route::get('/pengajuan_cuti/detail/{id}', 'show')->name('pengajuan_cuti.show');
+            Route::patch('/pengajuan_cuti/approved/{id}', 'approvedCuti')->name('pengajuan_cuti.approvedCuti');
             Route::patch('/pengajuan_cuti/rejected/{id}', 'rejectedCuti')->name('pengajuan_cuti.rejectedCuti');
             Route::delete('/pengajuan_cuti/{id}', 'destroy')->name('pengajuan_cuti.destroy');
         });
