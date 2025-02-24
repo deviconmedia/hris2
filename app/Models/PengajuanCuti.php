@@ -32,6 +32,7 @@ class PengajuanCuti extends Model
         'catatan',
         'lampiran',
         'send_to',
+        'approver',
         'approved_at',
         'approved_by'
     ];
@@ -41,9 +42,9 @@ class PengajuanCuti extends Model
         return $this->belongsTo(Karyawan::class);
     }
 
-    public function sendTo(): BelongsTo
+    public function penyetuju(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class, 'send_to', 'id');
+        return $this->belongsTo(Karyawan::class, 'approver', 'id');
     }
 
     public function jenisCuti(): BelongsTo

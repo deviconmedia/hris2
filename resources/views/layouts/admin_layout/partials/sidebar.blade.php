@@ -122,12 +122,6 @@
                             <a href="{{ route('norma_cuti.index') }}" class="submenu-link">Norma Cuti</a>
 
                         </li>
-
-                        <li class="submenu-item  ">
-                            <a href="component-alert.html" class="submenu-link">Pengaturan Cuti</a>
-
-                        </li>
-
                     </ul>
                 </li>
                 <li class="sidebar-item  has-sub">

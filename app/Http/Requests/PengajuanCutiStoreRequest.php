@@ -24,6 +24,7 @@ class PengajuanCutiStoreRequest extends FormRequest
         return [
             'karyawan_id' => ['required', 'numeric', 'exists:karyawan,id'],
             'send_to' => ['required', 'numeric', 'exists:karyawan,id'],
+            'approver' => ['required', 'numeric', 'exists:karyawan,id'],
             'jenis_cuti_id' => ['required', 'numeric', 'exists:jenis_cuti,id'],
             'tgl_mulai' => ['required', 'date'],
             'tgl_selesai' => ['required', 'date'],
@@ -39,9 +40,13 @@ class PengajuanCutiStoreRequest extends FormRequest
             'karyawan_id.numeric' => 'ID Karyawan harus berupa angka.',
             'karyawan_id.exists' => 'ID Karyawan tidak ditemukan dalam database.',
 
-            'send_to.required' => 'Pilih penyetuju terlebih dahulu.',
-            'send_to.numeric' => 'ID penyetuju harus berupa angka.',
-            'send_to.exists' => 'ID penyetuju tidak ditemukan dalam database.',
+            'send_to.required' => 'Pilih penerima terlebih dahulu.',
+            'send_to.numeric' => 'ID penerima harus berupa angka.',
+            'send_to.exists' => 'ID penerima tidak ditemukan dalam database.',
+
+            'approver.required' => 'Pilih penyetuju terlebih dahulu.',
+            'approver.numeric' => 'ID penyetuju harus berupa angka.',
+            'approver.exists' => 'ID penyetuju tidak ditemukan dalam database.',
 
             'jenis_cuti_id.required' => 'Jenis cuti harus diisi.',
             'jenis_cuti_id.numeric' => 'ID Jenis cuti harus berupa angka.',

@@ -148,6 +148,18 @@
     @stack('js')
 
     <script>
+        window.addEventListener("online", () => {
+            toastr.success('Hore! Internetmu kembali normal.', 'Koneksi Berhasil', {
+                timeOut: 3000
+            });
+        });
+
+        window.addEventListener("offline", () => {
+            toastr.error('Upps! internetmu terputus. Silahkan cek koneksi internetmu ya!', 'Koneksi Gagal', {
+                timeOut: 3000
+            });
+        });
+
         window.addEventListener('load', function() {
             var preloader = document.querySelector('.preloader');
             var content = document.querySelector('.content');

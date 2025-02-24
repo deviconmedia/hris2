@@ -72,7 +72,7 @@
                     name: 'Nama Karyawan',
                 },
                 {
-                    data: 'send_to',
+                    data: 'penyetuju',
                     name: 'Penyetuju',
                 },
                 {

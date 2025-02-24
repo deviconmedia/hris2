@@ -56,6 +56,15 @@
                             </div>
 
                             <div class="form-group mandatory">
+                                <label for="approver" class="form-label">Penyetuju</label>
+                                <select name="approver" id="approver" class="form-select choices" required>
+                                    @foreach ($data['staffs'] as $staff)
+                                        <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group mandatory">
                                 <label for="tgl_mulai" class="form-label">Tanggal Mulai</label>
                                 <input type="date" name="tgl_mulai" id="tgl_mulai" class="form-control" required>
                             </div>

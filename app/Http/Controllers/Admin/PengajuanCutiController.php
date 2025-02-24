@@ -57,8 +57,8 @@ class PengajuanCutiController extends Controller
             ->addColumn('tgl_pengajuan', function($pengajuanCuti){
                 return date('d-m-Y', strtotime($pengajuanCuti->tgl_pengajuan)) ;
             })
-            ->addColumn('send_to', function($pengajuanCuti){
-                return $pengajuanCuti->sendTo->nama ?? 'Tidak Diketahui';
+            ->addColumn('penyetuju', function($pengajuanCuti){
+                return $pengajuanCuti->penyetuju->nama ?? 'Tidak Diketahui';
             })
             ->addColumn('opsi', function ($pengajuanCuti) {
                 $showUrl = route('pengajuan_cuti.show', $pengajuanCuti->id);

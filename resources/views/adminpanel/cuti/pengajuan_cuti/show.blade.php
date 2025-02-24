@@ -31,7 +31,7 @@
                         </tr>
                         <tr>
                             <th>Penyetuju</th>
-                            <td>{{ $data->sendTo->nama }}</td>
+                            <td>{{ $data->penyetuju->nama }}</td>
                         </tr>
                         <tr>
                             <th>Tanggal Dibuat</th>
@@ -64,6 +64,7 @@
             </div>
             <div class="card-footer">
                 <h5 class="text-title">Informasi Persetujuan</h5>
+                <small class="text-muted">Belum ada informasi</small>
             </div>
         </div>
     </div>
