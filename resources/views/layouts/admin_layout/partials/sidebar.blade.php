@@ -172,6 +172,11 @@
 
                         </li>
 
+                        <li class="submenu-item  ">
+                            <a href="{{ route('logs.index') }}" class="submenu-link">Log Aktivitas</a>
+
+                        </li>
+
                     </ul>
                 </li>
                 <li class="sidebar-item  has-sub">

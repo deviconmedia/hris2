@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\JabatanController;
@@ -112,6 +113,14 @@ Route::group(['middleware' => ['auth']], function(){
             Route::patch('/pengajuan_cuti/approved/{id}', 'approvedCuti')->name('pengajuan_cuti.approvedCuti');
             Route::patch('/pengajuan_cuti/rejected/{id}', 'rejectedCuti')->name('pengajuan_cuti.rejectedCuti');
             Route::delete('/pengajuan_cuti/{id}', 'destroy')->name('pengajuan_cuti.destroy');
+        });
+
+        /* Get Activity logs */
+        Route::prefix('modul_sistem')->group(function(){
+            Route::controller(ActivityLogController::class)->group(function(){
+                Route::get('/activity_logs', 'index')->name('logs.index');
+                Route::get('/activity_logs/get_data', 'getData')->name('logs.getData');
+            });
         });
 
     });
