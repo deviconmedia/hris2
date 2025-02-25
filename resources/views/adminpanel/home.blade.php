@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+    <h6 class="text-muted" id="greeting"></h6>
     <div class="col-12 col-lg-9">
         <div class="row">
             <div class="col-6 col-lg-6 col-md-6">
@@ -17,7 +18,8 @@
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                 <h6 class="text-muted font-semibold">Checkin Hari ini</h6>
                                 <h6 class="font-extrabold mb-0" id="dataCheckin"></h6>
-                                <small class="text-muted"><span id="jmlCheckin"></span>/<span id="jmlStaff"></span> sudah checkin</small>
+                                <small class="text-muted"><span id="jmlCheckin"></span>/<span id="jmlStaff"></span> sudah
+                                    checkin</small>
                             </div>
                         </div>
                     </div>
@@ -33,7 +35,8 @@
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                 <h6 class="text-muted font-semibold">Pengajuan Cuti</h6>
                                 <h6 class="font-extrabold mb-0" id="dataCuti"></h6>
-                                <small class="text-muted"><span id="jmlCutis"></span>/<span id="totalCutis"></span> sudah disetujui</small>
+                                <small class="text-muted"><span id="jmlCutis"></span>/<span id="totalCutis"></span> sudah
+                                    disetujui</small>
                             </div>
                         </div>
                     </div>
@@ -101,7 +104,7 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <h4>Last User Checkin</h4>
+                <h6>Most Recent Attendance</h6>
             </div>
             <div class="card-content pb-4" id="userLastActivityContainer">
 
@@ -112,6 +115,16 @@
 
 @push('js')
     <script>
+        $(document).ready(function() {
+            getCountData();
+            getLastActivity();
+            setInterval(getCountData, 60000);
+            setInterval(getLastActivity, 60000);
+            setGreetingMessage();
+            setInterval(updateClock, 1000);
+            updateClock();
+        });
+
         //Set Clock
         function updateClock() {
             const now = new Date();
@@ -120,8 +133,6 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             document.getElementById('clock2').innerText = `${hours}:${minutes}:${seconds}`;
         }
-        setInterval(updateClock, 1000);
-        updateClock();
 
         $.ajaxSetup({
             headers: {
@@ -129,12 +140,7 @@
             }
         });
 
-        $(document).ready(function() {
-            getCountData();
-            getLastActivity();
-            setInterval(getCountData, 60000);
-            setInterval(getLastActivity, 60000);
-        });
+
 
         function getCountData() {
             $.ajax({
@@ -157,19 +163,19 @@
 
 
         /*
-        * Get user last activity
-        */
+         * Get user last activity
+         */
         function getLastActivity() {
-        $.ajax({
-            url: '/beranda/getLastCheckin',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                var container = $('#userLastActivityContainer');
-                container.empty();
+            $.ajax({
+                url: '/beranda/getLastCheckin',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var container = $('#userLastActivityContainer');
+                    container.empty();
 
-                data.activities.forEach(function(activity) {
-                    var activityHtml = `
+                    data.activities.forEach(function(activity) {
+                        var activityHtml = `
                         <div class="recent-message d-flex px-4 py-3">
                             <div class="avatar avatar-lg">
                                 <img src="${activity.image_uri}" alt="Avatar">
@@ -180,13 +186,33 @@
                             </div>
                         </div>
                     `;
-                    container.append(activityHtml);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX error: ' + error);
+                        container.append(activityHtml);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error: ' + error);
+                }
+            });
+        }
+
+        /*
+         * Set greeting message
+         */
+        function setGreetingMessage() {
+            const now = new Date();
+            const hours = now.getHours();
+            let greeting;
+
+            if (hours < 12) {
+                greeting = 'Selamat Pagi';
+            } else if (hours < 18) {
+                greeting = 'Selamat Sore';
+            } else {
+                greeting = 'Selamat Malam';
             }
-        });
-    }
+
+            const userName = '{{ Auth::user()->name }}';
+            $('#greeting').text(`${greeting}, ${userName}! Selamat datang di dasbor Anda!`);
+        }
     </script>
 @endpush
