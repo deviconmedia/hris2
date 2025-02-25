@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'email' => 'eufrondpaduansi@iconmedia.co.id',
             'password' => bcrypt('password'),
             'phone' => '081359856450',
+            'image_uri' => "https://ui-avatars.com/api/?background=random&name=Efron+Paduansi",
             'role_id' => 1,
             'karyawan_id' => 1,
         ]);

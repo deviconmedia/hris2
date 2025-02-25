@@ -26,7 +26,7 @@ return new class extends Migration
             $table->foreignId('divisi_id')->nullable()->constrained('divisi');
             $table->foreignId('jabatan_id')->nullable()->constrained('jabatan');
             $table->boolean('status')->default(true);
-            $table->string('image_uri')->default('https://placehold.co/200');
+            $table->string('image_uri')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

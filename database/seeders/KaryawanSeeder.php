@@ -23,6 +23,7 @@ class KaryawanSeeder extends Seeder
             'divisi_id' => 1,
             'jabatan_id' => 1,
             'tgl_lahir' => '1999-08-03',
+            'image_uri' => "https://ui-avatars.com/api/?background=random&name=Efron+Paduansi",
             'jenis_kelamin' => 'L',
             'alamat' => 'Pamulang',
             'tgl_gabung' => '2022-10-20',

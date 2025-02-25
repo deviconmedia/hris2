@@ -120,6 +120,8 @@ class KaryawanController extends Controller
         try {
             $validated = $request->validated();
             $validated['kode'] = $this->generateEmployeeCode();
+            $name = urlencode($validated['nama']);
+            $validated['image_uri'] = "https://ui-avatars.com/api/?background=random&name={$name}";
 
             DB::transaction(function () use ($validated) {
                 $employee = Karyawan::create($validated);
@@ -129,6 +131,7 @@ class KaryawanController extends Controller
                     'email' => $validated['email'],
                     'phone' => $validated['telepon'],
                     'password' => bcrypt('iconmedia#' . date('Y')),
+                    'image_uri' => $validated['image_uri'],
                     'role_id' => 3, //Staff Role Id
                     'karyawan_id' => $employee->id,
                 ]);

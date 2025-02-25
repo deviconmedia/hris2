@@ -22,6 +22,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Profil</th>
                                     <th>Kode</th>
                                     <th>Nama Lengkap</th>
                                     <th>Telepon</th>
@@ -50,6 +51,13 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
+                },
+                {
+                    data: 'image_uri',
+                    name: 'Profil',
+                    render: function(data, type, row) {
+                        return '<img src="' + data + '" alt="Profil" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">';
+                    }
                 },
                 {
                     data: 'kode',
@@ -102,51 +110,5 @@
             });
         });
 
-        // Delete Data
-        // function deleteData(id) {
-        //     Swal.fire({
-        //         title: 'Apakah Anda yakin?',
-        //         text: "Data yang dihapus tidak dapat dikembalikan!",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Ya, hapus!',
-        //         cancelButtonText: 'Batal'
-        //     }).then((result) => {
-        //         if (result.isConfirmed) {
-        //             $.ajax({
-        //                 url: '/karyawan/hapus/' + id,
-        //                 type: 'DELETE',
-        //                 data: {
-        //                     _token: '{{ csrf_token() }}'
-        //                 },
-        //                 success: function(response) {
-        //                     if (response.success) {
-        //                         Swal.fire(
-        //                             'Dihapus!',
-        //                             'Data berhasil dihapus.',
-        //                             'success'
-        //                         );
-        //                         $('#karyawanTable').DataTable().ajax.reload(); // Reload tabel DataTables
-        //                     } else {
-        //                         Swal.fire(
-        //                             'Gagal!',
-        //                             'Terjadi kesalahan saat menghapus data.',
-        //                             'error'
-        //                         );
-        //                     }
-        //                 },
-        //                 error: function() {
-        //                     Swal.fire(
-        //                         'Error!',
-        //                         'Terjadi kesalahan. Silakan coba lagi.',
-        //                         'error'
-        //                     );
-        //                 }
-        //             });
-        //         }
-        //     });
-        // }
     </script>
 @endpush

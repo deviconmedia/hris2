@@ -41,11 +41,15 @@ class HomeController extends Controller
         $data = [
             'staffs' => Karyawan::where('status', 1)->count(),
             'checkins' => RekamKehadiran::where('tgl_rekam', $today)->count(),
-            'cutis' => PengajuanCuti::where('status', 'disetujui')->count()
+            'cutis' => PengajuanCuti::where('status', 'disetujui')->count(),
+            'totalCutis' => PengajuanCuti::count()
         ];
 
         return response()->json([
-            'data' => $data
+            'staffs' => $data['staffs'],
+            'checkins' => $data['checkins'],
+            'cutis' => $data['cutis'],
+            'totalCutis' => $data['totalCutis'],
         ]);
     }
 

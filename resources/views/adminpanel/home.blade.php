@@ -16,8 +16,8 @@
                             </div>
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                 <h6 class="text-muted font-semibold">Checkin Hari ini</h6>
-                                <h6 class="font-extrabold mb-0">112.000</h6>
-                                <small class="text-muted">5/43 sudah checkin</small>
+                                <h6 class="font-extrabold mb-0" id="dataCheckin"></h6>
+                                <small class="text-muted"><span id="jmlCheckin"></span>/<span id="jmlStaff"></span> sudah checkin</small>
                             </div>
                         </div>
                     </div>
@@ -32,47 +32,13 @@
                             </div>
                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                 <h6 class="text-muted font-semibold">Pengajuan Cuti</h6>
-                                <h6 class="font-extrabold mb-0">183.000</h6>
-                                <small class="text-muted">3/7 sudah disetujui</small>
+                                <h6 class="font-extrabold mb-0" id="dataCuti"></h6>
+                                <small class="text-muted"><span id="jmlCutis"></span>/<span id="totalCutis"></span> sudah disetujui</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {{-- <div class="col-6 col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body px-4 py-4-5">
-                        <div class="row">
-                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                <div class="stats-icon green mb-2">
-                                    <i class="iconly-boldAdd-User"></i>
-                                </div>
-                            </div>
-                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                <h6 class="text-muted font-semibold">Following</h6>
-                                <h6 class="font-extrabold mb-0">80.000</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body px-4 py-4-5">
-                        <div class="row">
-                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                <div class="stats-icon red mb-2">
-                                    <i class="iconly-boldBookmark"></i>
-                                </div>
-                            </div>
-                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                <h6 class="text-muted font-semibold">Saved Post</h6>
-                                <h6 class="font-extrabold mb-0">112</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
         </div>
         <div class="row">
             <div class="col-12">
@@ -192,27 +158,28 @@
             }
         });
 
+        $(document).ready(function() {
+            getCountData();
+            setInterval(getCountData, 60000);
+        });
+
         function getCountData() {
             $.ajax({
-                url: '/dashboard/get-count/',
+                url: '/beranda/getCount',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    $('#employees').text(data.employees);
-                    $('#attendances').text(data.attendances);
-                    $('#activeUsers').text(data.activeUsers);
-                    $('#inactiveUsers').text(data.inactiveUsers);
+                    $('#dataCheckin').text(data.checkins);
+                    $('#jmlCheckin').text(data.checkins);
+                    $('#dataCuti').text(data.cutis);
+                    $('#jmlStaff').text(data.staffs);
+                    $('#jmlCutis').text(data.cutis);
+                    $('#totalCutis').text(data.totalCutis);
                 },
                 error: function(xhr, status, error) {
                     console.error('AJAX error: ' + error);
                 }
             });
         }
-
-        $(document).ready(function() {
-            getCountData();
-            setInterval(getCountData, 60000);
-        });
-
     </script>
 @endpush
