@@ -53,4 +53,19 @@ class HomeController extends Controller
         ]);
     }
 
+    public function getLastCheckin()
+    {
+        $lastCheckin = RekamKehadiran::latest()->take(3)->get()->map(function ($checkin) {
+            return [
+                'image_uri' => $checkin->karyawan->image_uri,
+                'name' => $checkin->karyawan->nama,
+                'time' => $checkin->created_at->diffForHumans(),
+            ];
+        });
+
+        return response()->json([
+            'activities' => $lastCheckin
+        ]);
+    }
+
 }

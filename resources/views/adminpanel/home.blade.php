@@ -101,39 +101,10 @@
         </div>
         <div class="card">
             <div class="card-header">
-                <h4>Aktivitas Terakhir</h4>
+                <h4>Last User Checkin</h4>
             </div>
-            <div class="card-content pb-4">
-                <div class="recent-message d-flex px-4 py-3">
-                    <div class="avatar avatar-lg">
-                        <img src="./assets/compiled/jpg/4.jpg">
-                    </div>
-                    <div class="name ms-4">
-                        <h5 class="mb-1">Hank Schrader</h5>
-                        <h6 class="text-muted mb-0">@johnducky</h6>
-                    </div>
-                </div>
-                <div class="recent-message d-flex px-4 py-3">
-                    <div class="avatar avatar-lg">
-                        <img src="./assets/compiled/jpg/5.jpg">
-                    </div>
-                    <div class="name ms-4">
-                        <h5 class="mb-1">Dean Winchester</h5>
-                        <h6 class="text-muted mb-0">@imdean</h6>
-                    </div>
-                </div>
-                <div class="recent-message d-flex px-4 py-3">
-                    <div class="avatar avatar-lg">
-                        <img src="./assets/compiled/jpg/1.jpg">
-                    </div>
-                    <div class="name ms-4">
-                        <h5 class="mb-1">John Dodol</h5>
-                        <h6 class="text-muted mb-0">@dodoljohn</h6>
-                    </div>
-                </div>
-                <div class="px-4">
-                    <button class='btn btn-block btn-xl btn-outline-primary font-bold mt-3'>Start Conversation</button>
-                </div>
+            <div class="card-content pb-4" id="userLastActivityContainer">
+
             </div>
         </div>
     </div>
@@ -160,7 +131,9 @@
 
         $(document).ready(function() {
             getCountData();
+            getLastActivity();
             setInterval(getCountData, 60000);
+            setInterval(getLastActivity, 60000);
         });
 
         function getCountData() {
@@ -181,5 +154,39 @@
                 }
             });
         }
+
+
+        /*
+        * Get user last activity
+        */
+        function getLastActivity() {
+        $.ajax({
+            url: '/beranda/getLastCheckin',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                var container = $('#userLastActivityContainer');
+                container.empty();
+
+                data.activities.forEach(function(activity) {
+                    var activityHtml = `
+                        <div class="recent-message d-flex px-4 py-3">
+                            <div class="avatar avatar-lg">
+                                <img src="${activity.image_uri}" alt="Avatar">
+                            </div>
+                            <div class="name ms-4">
+                                <h5 class="mb-1">${activity.name}</h5>
+                                <small class="text-muted mb-0">${activity.time}</small>
+                            </div>
+                        </div>
+                    `;
+                    container.append(activityHtml);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX error: ' + error);
+            }
+        });
+    }
     </script>
 @endpush
