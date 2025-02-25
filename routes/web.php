@@ -117,7 +117,7 @@ Route::group(['middleware' => ['auth']], function(){
         });
     });
 
-    /* Get Activity logs */
+    /* Get laporan kehadiran karyawan */
     Route::prefix('laporan')->group(function(){
         Route::controller(LaporanKehadiranController::class)->group(function(){
             Route::get('/kehadiran', 'index')->name('laporan_kehadiran.index');
