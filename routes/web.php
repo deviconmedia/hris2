@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisCutiController;
 use App\Http\Controllers\Admin\KaryawanController;
+use App\Http\Controllers\Admin\LaporanKehadiranController;
 use App\Http\Controllers\Admin\NormaCutiController;
 use App\Http\Controllers\Admin\PengajuanCutiController;
 use App\Http\Controllers\Admin\RekamKehadiranController;
@@ -114,16 +115,25 @@ Route::group(['middleware' => ['auth']], function(){
             Route::patch('/pengajuan_cuti/rejected/{id}', 'rejectedCuti')->name('pengajuan_cuti.rejectedCuti');
             Route::delete('/pengajuan_cuti/{id}', 'destroy')->name('pengajuan_cuti.destroy');
         });
+    });
 
-        /* Get Activity logs */
-        Route::prefix('modul_sistem')->group(function(){
-            Route::controller(ActivityLogController::class)->group(function(){
-                Route::get('/activity_logs', 'index')->name('logs.index');
-                Route::get('/activity_logs/get_data', 'getData')->name('logs.getData');
-                Route::post('/activity_logs', 'truncate')->name('logs.truncate');
-            });
+    /* Get Activity logs */
+    Route::prefix('laporan')->group(function(){
+        Route::controller(LaporanKehadiranController::class)->group(function(){
+            Route::get('/kehadiran', 'index')->name('laporan_kehadiran.index');
+            Route::get('/kehadiran/get_data', 'getData')->name('laporan_kehadiran.getData');
+            Route::get('/kehadiran/detail/{id}', 'show')->name('laporan_kehadiran.show');
         });
+    });
 
+
+    /* Get Activity logs */
+    Route::prefix('modul_sistem')->group(function(){
+        Route::controller(ActivityLogController::class)->group(function(){
+            Route::get('/activity_logs', 'index')->name('logs.index');
+            Route::get('/activity_logs/get_data', 'getData')->name('logs.getData');
+            Route::post('/activity_logs', 'truncate')->name('logs.truncate');
+        });
     });
 
 });

@@ -16,7 +16,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <a href="{{ route('presensi.myAttendances') }}" class="btn btn-sm btn-dark"><i class="bi bi-arrow-left"></i>
+                <a href="{{ route('laporan_kehadiran.index') }}" class="btn btn-sm btn-dark"><i class="bi bi-arrow-left"></i>
                     Kembali</a>
             </div>
             <div class="card-body">

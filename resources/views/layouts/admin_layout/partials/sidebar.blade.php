@@ -124,7 +124,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub {{ request()->is('laporan') || request()->is('laporan/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-bar-chart-fill"></i>
                         <span>Laporan</span>
@@ -132,19 +132,19 @@
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
-                            <a href="component-accordion.html" class="submenu-link">Presensi Karyawan</a>
+                        <li class="submenu-item {{ request()->is('laporan/kehadiran') || request()->is('laporan/kehadiran/*') ? 'active' : '' }}">
+                            <a href="{{ route('laporan_kehadiran.index') }}" class="submenu-link">Presensi Karyawan</a>
 
                         </li>
 
-                        <li class="submenu-item  ">
+                        {{-- <li class="submenu-item  ">
                             <a href="component-alert.html" class="submenu-link">Kinerja Karyawan</a>
 
-                        </li>
+                        </li> --}}
 
                     </ul>
                 </li>
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub {{ request()->is('modul_sistem') || request()->is('modul_sistem/*') ? 'active' : '' }}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-layers-fill"></i>
                         <span>Modul Sistem</span>
@@ -172,7 +172,7 @@
 
                         </li>
 
-                        <li class="submenu-item  ">
+                        <li class="submenu-item {{ request()->is('modul_sistem/activity_logs') ? 'active' : '' }}">
                             <a href="{{ route('logs.index') }}" class="submenu-link">Log Aktivitas</a>
 
                         </li>

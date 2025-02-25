@@ -27,7 +27,11 @@ class ActivityLogController extends Controller
                 return $log->causer ? $log->causer->name : 'Guest';
             })
             ->addColumn('properties', function ($log) {
-                return json_encode($log->properties, JSON_PRETTY_PRINT);
+                $formattedProperties = json_encode($log->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+                $formattedProperties = str_replace(["\n", "\r"], ' ', $formattedProperties);
+
+                return htmlspecialchars($formattedProperties, ENT_QUOTES, 'UTF-8');
             })
             ->editColumn('created_at', function ($log) {
                 return $log->created_at->format('Y-m-d H:i:s');
