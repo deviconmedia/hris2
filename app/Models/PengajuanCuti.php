@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PengajuanCuti extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     /**
      * The table associated with the model.
@@ -55,6 +57,15 @@ class PengajuanCuti extends Model
     public function jenisCuti(): BelongsTo
     {
         return $this->belongsTo(JenisCuti::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['karyawan_id', 'jenis_cuti_id', 'tgl_pengajuan', 'catatan', 'status'])
+            ->useLogName('pengajuan_cuti')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Pengajuan cuti has been {$eventName}");
     }
 
 }

@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class JenisCuti extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     /**
      * The table associated with the model.
@@ -47,4 +49,14 @@ class JenisCuti extends Model
             NormaCuti::where('jenis_cuti_id', $jenisCuti->id)->delete();
         });
     }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama_cuti', 'deskripsi'])
+            ->useLogName('jenis_cuti')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Jenis cuti has been {$eventName}");
+    }
+
 }

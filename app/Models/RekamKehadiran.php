@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RekamKehadiran extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     /**
      * The table associated with the model.
@@ -39,6 +42,16 @@ class RekamKehadiran extends Model
     public function shift() : BelongsTo
     {
         return $this->belongsTo(Shift::class);
+    }
+
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['karyawan_id', 'shift_id', 'jam_masuk', 'jam_pulang', 'status'])
+            ->useLogName('rekam_kehadiran')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Presensi has been {$eventName}");
     }
 
 }

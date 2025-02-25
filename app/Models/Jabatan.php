@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Jabatan extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     /**
      * The table associated with the model.
@@ -27,4 +30,14 @@ class Jabatan extends Model
     {
         return $this->hasMany(Karyawan::class);
     }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['nama_jabatan', 'status'])
+            ->useLogName('jabatan')
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(fn(string $eventName) => "Jabatan has been {$eventName}");
+    }
+
 }
