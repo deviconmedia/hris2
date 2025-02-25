@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\ResponseMessages;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\DataTables;
@@ -33,6 +34,27 @@ class ActivityLogController extends Controller
             })
             ->rawColumns(['properties'])
             ->make(true);
+    }
+
+    /**
+     * Truncate logs table
+     */
+    public function truncate()
+    {
+        try {
+            Activity::truncate();
+
+            return response()->json([
+               'success' => true,
+                'message' => ResponseMessages::DeleteBerhasil
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => ResponseMessages::DeleteGagal
+            ], 500);
+        }
+
     }
 
 }

@@ -12,13 +12,12 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                {{-- <div class="card-header-action d-flex justify-content-end">
-                    <a href="{{ route('jabatan.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
-                        Tambah Baru</a>
-                </div> --}}
+                <div class="card-header">
+                    <button class="btn btn-sm btn-secondary" onclick="refreshTable()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+                </div>
                 <div class="card-body">
                    <div class="table-responsive">
-                        <table class="table" id="jabatanTable">
+                        <table class="table" id="rekamanPresensiTable">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -41,7 +40,7 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            $('#jabatanTable').DataTable({
+            $('#rekamanPresensiTable').DataTable({
                 processing: true,
                 serverside: true,
                 ajax: '{!! route('presensi.getData') !!}',
@@ -129,7 +128,7 @@
                                     'Data berhasil dihapus.',
                                     'success'
                                 );
-                                $('#jabatanTable').DataTable().ajax.reload(); // Reload tabel DataTables
+                                $('#rekamanPresensiTable').DataTable().ajax.reload(); // Reload tabel DataTables
                             } else {
                                 Swal.fire(
                                     'Gagal!',
@@ -148,6 +147,13 @@
                     });
                 }
             });
+        }
+
+         /*
+        * Refresh logs table
+        */
+        function refreshTable() {
+            $('#rekamanPresensiTable').DataTable().ajax.reload();
         }
     </script>
 @endpush

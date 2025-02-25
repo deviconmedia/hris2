@@ -11,6 +11,10 @@
 @section('content')
     <div class="col-12">
         <div class="card">
+            <div class="card-header">
+                <button class="btn btn-sm btn-secondary" onclick="refreshTable()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+                <button class="btn btn-sm btn-danger" onclick="truncateTable()"><i class="bi bi-trash"></i> Delete Logs</button>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table" id="logsTable">
@@ -48,5 +52,55 @@
                 ]
             });
         });
+
+        /*
+        * Refresh logs table
+        */
+        function refreshTable() {
+            $('#logsTable').DataTable().ajax.reload();
+        }
+
+        /*
+        * Truncate logs table
+        */
+        function truncateTable() {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route('logs.truncate') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                toastr.success(response.message, 'Berhasil', {
+                                    timeOut: 3000
+                                });
+                                $('#logsTable').DataTable().ajax.reload();
+                            } else {
+                                toastr.error(response.message, 'Gagal', {
+                                    timeOut: 3000
+                                });
+                            }
+                        },
+                        error: function() {
+                            toastr.error("Ada kesalahan saat menghapus data", 'Gagal', {
+                                timeOut: 3000
+                            });
+                        }
+                    });
+                }
+            });
+        }
     </script>
 @endpush

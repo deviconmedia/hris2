@@ -120,6 +120,7 @@ Route::group(['middleware' => ['auth']], function(){
             Route::controller(ActivityLogController::class)->group(function(){
                 Route::get('/activity_logs', 'index')->name('logs.index');
                 Route::get('/activity_logs/get_data', 'getData')->name('logs.getData');
+                Route::post('/activity_logs', 'truncate')->name('logs.truncate');
             });
         });
 
