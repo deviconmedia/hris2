@@ -42,7 +42,7 @@ class RekamKehadiranController extends Controller
 
     public function getData()
     {
-        $presensi = RekamKehadiran::where('karyawan_id', auth()->user()->karyawan->id)->get();
+        $presensi = RekamKehadiran::where('karyawan_id', auth()->user()->karyawan->id)->latest()->get();
         return DataTables::of($presensi)
             ->addIndexColumn()
             ->addColumn('opsi', function ($presensi) {

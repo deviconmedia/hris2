@@ -30,6 +30,7 @@ class User extends Authenticatable
         'image_uri',
         'role_id',
         'karyawan_id',
+        'telegram_id'
     ];
 
     /**

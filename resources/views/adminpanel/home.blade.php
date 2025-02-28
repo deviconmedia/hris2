@@ -4,6 +4,10 @@
     Beranda
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+@endpush
+
 @section('content')
     <h6 class="text-muted" id="greeting"></h6>
     <div class="col-12 col-lg-9">
@@ -49,39 +53,32 @@
                     <div class="card-header">
                         <h4><i class="fas fa-user-clock"></i> Rekam Kehadiran</h4>
                     </div>
-                    <div class="card-body">
-                        <h1 class="clock text-primary text-center" id="clock2"></h1>
+                    <div class="card-body text-center">
+                        <h1 class="clock mb-5" id="clock2"></h1>
                         @if (empty($data['absen']['jam_masuk']) && empty($data['absen']['jam_pulang']))
-                            <div class="text-center mb-5">
-                                <p class="badge bg-danger">Anda belum check-in hari ini</p>
-                            </div>
+                            <p class="badge bg-danger">Anda belum check-in hari ini</p>
                         @else
+                            <small class="text-muted">Checkin: {{ $data['absen']['jam_masuk'] }} | Checkout: {{ $data['absen']['jam_pulang'] ?? '-' }}</small>
                             <h6>Status Kehadiran:
                                 <span
-                                    class="badge bg-{{ $data['absen']['status'] == 1 ? 'success' : ($data['absen']['status'] == 2 ? 'danger' : ($data['absen']['status'] == 3 ? 'warning' : 'warning')) }}">
-                                    {{ $data['absen']['status'] == 1
-                                        ? 'Sudah Absen'
-                                        : ($data['absen']['status'] == 2
-                                            ? 'Terlambat'
-                                            : ($data['absen']['status'] == 3
-                                                ? 'Tidak Ada'
-                                                : 'Tidak Diketahui')) }}
+                                    class="badge bg-{{ $data['absen']['status'] == 'hadir' ? 'success' : ($data['absen']['status'] == 'terlambat' ? 'danger' : ($data['absen']['status'] == 'pulang cepat' ? 'warning' : 'warning')) }} text-capitalize">
+                                    {{ $data['absen']['status'] }}
                                 </span>
                             </h6>
-                            <p>Absen Masuk: {{ $data['absen']['jam_masuk'] ?? 'Tidak Ada Data' }}</p>
-                            <p>Absen Pulang: {{ $data['absen']['jam_pulang'] ?? 'Tidak Ada Data' }}</p>
                         @endif
-                        <form method="post" id="rekamForm">
+                        <form id="rekamKehadiranForm" method="POST">
                             <div class="form-group">
-                                <label for="shift_id" class="form-label">Pilih Shift</label>
+                                <label for="shift_id" class="form-label">Pilih Jam Kerja</label>
                                 <select name="shift_id" id="shift_id" class="form-select">
                                     @foreach ($data['shifts'] as $shift)
                                         <option value="{{ $shift->id }}">{{ $shift->nama_shift }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            <button type="submit"
-                                class="btn btn-block btn-success rounded-pill shadow-lg mt-2">Rekam</button>
+                            <input type="hidden" name="latitude" id="latitude">
+                            <input type="hidden" name="longitude" id="longitude">
+                            <button type="submit" class="btn btn-block btn-success rounded-pill shadow-lg my-3"
+                                id="recordBtn">Rekam</button>
                         </form>
                     </div>
                 </div>
@@ -114,6 +111,7 @@
 @endsection
 
 @push('js')
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         $(document).ready(function() {
             getCountData();
@@ -124,6 +122,25 @@
             setInterval(updateClock, 1000);
             updateClock();
         });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                // Set hidden field values
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+
+                // Update map
+                map.setView([lat, lng], 15);
+                L.marker([lat, lng]).addTo(map).bindPopup("Lokasi Anda Saat Ini").openPopup();
+            }, function(error) {
+                console.error("Geolocation error: ", error);
+            });
+        } else {
+            console.error("Geolocation tidak didukung oleh browser Anda.");
+        }
 
         //Set Clock
         function updateClock() {
@@ -212,7 +229,64 @@
             }
 
             const userName = '{{ Auth::user()->name }}';
-            $('#greeting').text(`${greeting}, ${userName}! Selamat datang di dasbor Anda!`);
+            $('#greeting').text(`${greeting} ${userName}, Selamat datang di dasbor Anda!`);
         }
+
+         //SIMPAN DATA
+         $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#rekamKehadiranForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var formData = {
+                shift_id: $('#shift_id').val(),
+                latitude: $('#latitude').val(),
+                longitude: $('#longitude').val(),
+            }
+
+            $.ajax({
+                url: '{{ route('presensi.store') }}',
+                type: 'POST',
+                data: formData,
+                beforeSend: function() {
+                    $('#recordBtn').prop('disabled', true).html(
+                        '<i class="fas fa-spinner fa-spin"></i> Sedang Merekam...');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message, 'Berhasil', {
+                            timeOut: 3000
+                        });
+
+                        setTimeout(() => {
+                            window.location.href = '{{ route('home') }}';
+                        }, 1500);
+                    } else {
+                        toastr.error(response.message, 'Gagal', {
+                            timeOut: 3000
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                    let errorMessage = 'Terjadi kesalahan saat mengirim data!';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    toastr.error(errorMessage, 'Gagal', {
+                        timeOut: 3000
+                    });
+                },
+
+                complete: function() {
+                    $('#recordBtn').prop('disabled', false).html('Rekam');
+                }
+            });
+        });
     </script>
 @endpush

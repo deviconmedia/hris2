@@ -40,6 +40,7 @@ class Karyawan extends Model
         'tgl_gabung',
         'divisi_id',
         'jabatan_id',
+        'telegram_id',
         'status',
         'image_uri',
     ];

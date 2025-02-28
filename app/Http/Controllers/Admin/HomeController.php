@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Models\Shift;
-use Illuminate\Http\Request;
-use App\Models\RekamKehadiran;
-use App\Http\Controllers\Controller;
 use App\Models\Karyawan;
+use Illuminate\Http\Request;
 use App\Models\PengajuanCuti;
+use App\Models\RekamKehadiran;
+use App\Helpers\TelegramHelper;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -17,20 +18,20 @@ class HomeController extends Controller
         $currentUser = auth()->user();
         $todayDate = Carbon::now()->format('Y-m-d');
         $currentEmployee = auth()->user()->karyawan->id;
-        $data['absen'] = RekamKehadiran::where('karyawan_id', $currentEmployee)
+        $myAbsen = RekamKehadiran::where('karyawan_id', $currentEmployee)
                         ->where('tgl_rekam', $todayDate)
                         ->first();
 
-        if(!$data['absen']){
+        if(!$myAbsen){
             $shifts = Shift::where('status', 1)->get();
         }else{
-            $shifts = Shift::where('id', $data['absen']['shift_id'])->get();
+            $shifts = Shift::where('id', $myAbsen->shift_id)->get();
         }
-
         $data = [
             'currentUser' => $currentUser,
             'shifts' => $shifts,
             'currentDay' => Carbon::now()->format('d F Y'),
+            'absen' => $myAbsen
         ];
         return view('adminpanel.home', compact('data'));
     }
@@ -55,17 +56,23 @@ class HomeController extends Controller
 
     public function getLastCheckin()
     {
-        $lastCheckin = RekamKehadiran::latest()->take(3)->get()->map(function ($checkin) {
+        $lastCheckin = RekamKehadiran::latest('updated_at')->take(3)->get()->map(function ($checkin) {
             return [
                 'image_uri' => $checkin->karyawan->image_uri,
                 'name' => $checkin->karyawan->nama,
-                'time' => $checkin->created_at->diffForHumans(),
+                'time' => $checkin->updated_at->diffForHumans(),
             ];
         });
 
         return response()->json([
             'activities' => $lastCheckin
         ]);
+    }
+
+    public function sendTestMessage()
+    {
+        $response = TelegramHelper::sendMessage("Testing!");
+        return response()->json($response);
     }
 
 }
