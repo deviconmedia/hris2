@@ -36,7 +36,10 @@ class UserController extends Controller
                     </div>
                 ';
             })
-            ->rawColumns(['is_active'])
+            ->addColumn('last_logged', function($users){
+                return $users->last_logged ? $users->last_logged : 'Belum Pernah Login';
+            })
+            ->rawColumns(['last_logged', 'is_active'])
             ->make(true);
     }
 

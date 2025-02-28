@@ -24,8 +24,8 @@
                                     <th>#</th>
                                     <th>Nama</th>
                                     <th>Email</th>
-                                    <th>Telepon</th>
                                     <th>Peran</th>
+                                    <th>Login Terakhir</th>
                                     <th>Aktif?</th>
                                 </tr>
                             </thead>
@@ -38,6 +38,7 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset('static/js/moment.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#usersTable').DataTable({
@@ -61,12 +62,20 @@
                         name: 'email',
                     },
                     {
-                        data: 'phone',
-                        name: 'phone',
-                    },
-                    {
                         data: 'role_name',
                         name: 'role_name',
+                    },
+                    {
+                        data: 'last_logged',
+                        name: 'last_logged',
+                        render: function(data, type, row) {
+                        if (data) {
+                            moment.locale('id');
+
+                            return moment(data).fromNow();
+                        }
+                        return 'Tidak Ada Data';
+                    }
                     },
                     {
                         data: 'is_active',
