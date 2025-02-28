@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->belongsTo(Karyawan::class);
     }
 
+    public function role() : BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

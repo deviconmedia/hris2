@@ -8,20 +8,43 @@
     Semua Data Pengajuan Cuti
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('mazer/assets/extensions/choices.js/public/assets/styles/choices.css') }}">
+@endpush
+
 @section('content')
     <div class="col-12">
         <div class="row my-3">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
-                    <select name="karyawan_id" id="karyawan_id" class="form-select">
-                        <option value="">Pilih</option>
-                    </select>
+            <form id="filterForm" method="GET" data-url="{{ route('pengajuan_cuti.getData') }}">
+                <div class="row my-3">
+                    <div class="col-6 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label for="karyawan_id" class="form-label">Pilih Karyawan</label>
+                            <select name="karyawan_id" id="karyawan_id" class="form-select choices">
+                                @foreach ($data['staffs'] as $staff)
+                                    <option value="{{ $staff->id }}">{{ $staff->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label for="jenis_cuti_id" class="form-label">Jenis Cuti</label>
+                            <select name="jenis_cuti_id" id="jenis_cuti_id" class="form-select choices">
+                                @foreach ($data['jenisCuti'] as $jenisCuti)
+                                    <option value="{{ $jenisCuti->id }}">{{ $jenisCuti->nama_cuti }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
         <div class="card">
             <div class="card-header">
+                <div class="float-start">
+                    <button class="btn btn-sm btn-secondary" onclick="refreshTable()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+                </div>
                 <div class="card-header-action d-flex justify-content-end">
                     <a href="{{ route('pengajuan_cuti.create') }}" class="btn btn-primary rounded-pill"><i class="bi bi-plus-lg"></i>
                         Tambah Baru</a>
@@ -52,12 +75,20 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset('mazer/assets/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
+    <script src="{{ asset('mazer/assets/static/js/pages/form-element-select.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#pengajuanCutiTable').DataTable({
                 processing: true,
                 serverside: true,
-                ajax: '{!! route('pengajuan_cuti.getData') !!}',
+                ajax: {
+                    url: $('#filterForm').data('url'),
+                    data: function(d) {
+                        d.karyawan_id = $('#karyawan_id').val();
+                        d.jenis_cuti_id = $('#jenis_cuti_id').val();
+                    }
+                },
                 columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
@@ -110,6 +141,12 @@
                     orderable: false,
                     searchable: false
                 }]
+            });
+            $('#karyawan_id').on('change', function() {
+                $('#pengajuanCutiTable').DataTable().ajax.reload();
+            });
+            $('#jenis_cuti_id').on('change', function() {
+                $('#pengajuanCutiTable').DataTable().ajax.reload();
             });
         });
 
@@ -193,6 +230,13 @@
                     });
                 }
             });
+        }
+
+          /*
+        * Refresh logs table
+        */
+        function refreshTable() {
+            $('#pengajuanCutiTable').DataTable().ajax.reload();
         }
     </script>
 @endpush

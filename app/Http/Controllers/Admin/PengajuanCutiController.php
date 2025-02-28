@@ -19,12 +19,15 @@ class PengajuanCutiController extends Controller
 {
     public function index()
     {
-        return view('adminpanel.cuti.pengajuan_cuti.manage');
+        $data['staffs'] = Karyawan::where('status', 1)->get(['id', 'nama']);
+        $data['jenisCuti'] = JenisCuti::get(['id', 'nama_cuti']);
+        return view('adminpanel.cuti.pengajuan_cuti.manage', compact('data'));
     }
 
     public function getData(Request $request)
     {
         $staffId = $request->input('karyawan_id');
+        $jenisCutiId = $request->input('jenis_cuti_id');
         $currentStaff = auth()->user()->karyawan->id;
 
         $pengajuanCuti = PengajuanCuti::query();
@@ -38,7 +41,11 @@ class PengajuanCutiController extends Controller
             });
         }
 
-        $pengajuanCuti = $pengajuanCuti->get();
+        if($jenisCutiId){
+            $pengajuanCuti->where('jenis_cuti_id', $jenisCutiId);
+        }
+
+        $pengajuanCuti = $pengajuanCuti->latest()->get();
 
         return DataTables::of($pengajuanCuti)
             ->addIndexColumn()

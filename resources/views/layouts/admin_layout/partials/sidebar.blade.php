@@ -152,8 +152,8 @@
 
                     <ul class="submenu ">
 
-                        <li class="submenu-item  ">
-                            <a href="component-accordion.html" class="submenu-link">Data Pengguna</a>
+                        <li class="submenu-item {{ request()->is('modul_sistem/users') || request()->is('modul_sistem/users/*') ? 'active' : '' }}">
+                            <a href="{{ route('users.index') }}" class="submenu-link">Data Pengguna</a>
 
                         </li>
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\NormaCutiController;
 use App\Http\Controllers\Admin\PengajuanCutiController;
 use App\Http\Controllers\Admin\RekamKehadiranController;
 use App\Http\Controllers\Admin\ShiftController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 
@@ -136,6 +137,14 @@ Route::group(['middleware' => ['auth']], function(){
             Route::get('/activity_logs/get_data', 'getData')->name('logs.getData');
             Route::post('/activity_logs', 'truncate')->name('logs.truncate');
         });
+
+        Route::controller(UserController::class)->group(function(){
+            Route::get('/users', 'index')->name('users.index');
+            Route::get('/users/get_data', 'getData')->name('users.getData');
+            Route::post('/users/{user}/toggle-active', 'toggleActive')->name('users.toggle-active');
+            Route::get('/users/edit/{id}', 'edit')->name('users.edit');
+        });
     });
+
 
 });
